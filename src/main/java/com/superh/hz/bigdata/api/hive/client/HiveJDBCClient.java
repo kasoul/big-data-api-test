@@ -6,28 +6,16 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.DriverManager;
 
-/** 
- * @Project: big-apple-api-test
- * @File: HiveJDBCClient.java 
- * @Date: 2015年4月8日 
- * @Author: 黄超（huangchaohz）
- */
 
 /**
- * @Describe:hive客户端
+ * hive客户端
+ * 2015-4-8
  */
 public class HiveJDBCClient {
 
 	private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
 
-	/**
-	 * @description
-	 * @author 黄超(huangchaohz)
-	 * @date 2015年4月8日
-	 * @param
-	 * @return
-	 * @throws SQLException 
-	 */
+	
 	public static void main(String[] args) throws SQLException {
 		//System.out.println("\001");
 		//testInsertTable();

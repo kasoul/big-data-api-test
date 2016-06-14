@@ -7,14 +7,6 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** 
- *
- *
- * @Project: big-apple-api-test
- * @File: PropertyUtil.java 
- * @Date: 2014年11月28日 
- * @Author: 李晓平
- */
 
 public class PropertyUtil {
 	
@@ -31,7 +23,7 @@ public class PropertyUtil {
 		
 		try {
 			String path = getJarPath();
-			p.load(new FileInputStream(path + "conf/redis.properties"));
+			p.load(new FileInputStream(path + "conf/xxxx.properties"));
 			
 		} catch (IOException e) {
 			log.error("配置文件加载失败", e);

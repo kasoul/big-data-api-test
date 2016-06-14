@@ -30,15 +30,10 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 import com.superh.hz.bigdata.api.hbase.tool.userFilter.HCTestFilter;
 
-/** 
- * @Project: big-apple-api-test
- * @File: HBaseDataManager.java 
- * @Date: 2014年11月29日 
- * @Author: 黄超（huangchaohz）
- */
 
 /**
- * @Describe:数据操作方法，默认的rowkey是String类型
+ * 数据操作方法，默认的rowkey是String类型
+ * 2015-2-3
  */
 public class HBaseDataManager {
 

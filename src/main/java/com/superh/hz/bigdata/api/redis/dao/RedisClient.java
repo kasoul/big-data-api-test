@@ -11,15 +11,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 
-/** 
- * @Project: big-apple-api-test
- * @File: RedisClient.java 
- * @Date: 2015年4月8日 
- * @Author: 黄超（huangchaohz）
- */
-
 /**
- * @Describe:
+ * redis client
+ * 2015-4-8
  */
 public class RedisClient {
 	

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  @Describe:发送一个socket到服务器，客户端立刻关闭
+ * 发送一个socket到服务器，客户端立刻关闭
  */
 public class OIOSocketClientBootstrap {
 	private static final Logger logger = LoggerFactory.getLogger(OIOSocketClientBootstrap.class);

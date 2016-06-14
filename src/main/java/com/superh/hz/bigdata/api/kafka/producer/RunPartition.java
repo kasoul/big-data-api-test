@@ -6,7 +6,7 @@ import kafka.producer.Partitioner;
 import kafka.utils.VerifiableProperties;
 
 /**
- *  @Describe:分区类，生产者的消息根据这个类进入特定的分区。
+ * 分区类，生产者的消息根据这个类进入特定的分区。
  */
 public class RunPartition implements Partitioner
 {
@@ -15,7 +15,7 @@ public class RunPartition implements Partitioner
 	}
 
 	/**
-	 *  @Describe:生产者的分区规则
+	 * 生产者的分区规则
 	 */
 	public int partition(Object key, int numPartitions) {
 		// key 是指定的分区号

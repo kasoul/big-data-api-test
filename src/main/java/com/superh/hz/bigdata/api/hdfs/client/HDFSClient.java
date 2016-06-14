@@ -24,16 +24,9 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.hadoop.io.IOUtils;
 
-/** 
- *
- * @Project: big-apple-api-test
- * @File: HDFSClient.java 
- * @Date: 2015年4月8日 
- * @Author: 黄超（huangchaohz）
- */
 
 /**
- * @Describe:
+ * 2015-4-8
  */
 public class HDFSClient {
 

@@ -4,9 +4,7 @@ import org.apache.hadoop.ipc.ProtocolSignature;
 
 import java.io.IOException;
 
-/**
- * Created by zhanglijun on 7/11/15.
- */
+
 public class MyProtocolImpl implements MyProtocol {
 
     @Override

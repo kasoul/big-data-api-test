@@ -10,16 +10,9 @@ import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
 
 
-
-/** 
- * @Project: big-apple-api-test
- * @File: CommonZKClient.java 
- * @Date: 2015年6月19日 
- * @Author: 黄超（huangchaohz）
- */
-
 /**
- * @Describe:简单的zookeeper客户端
+ * 简单的zookeeper客户端
+ * 2015-06-19
  */
 public class CommonZKClient {
 	public static void main(String[] args) {

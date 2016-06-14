@@ -9,15 +9,11 @@ import kafka.producer.ProducerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** 
- * @Project: big-apple-api-test
- * @File: KafakaProducerA.java 
- * @Date: 2016年2月14日 
- * @Author: 黄超（huangchaohz）
- */
+
 
 /**
- *  @Describe:
+ *  生产者
+ *  2016-2-15
  */
 public class KafkaProducerA {
 	

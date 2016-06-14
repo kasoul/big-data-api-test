@@ -6,16 +6,9 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** 
- *
- * @Project: big-apple-api-test
- * @File: ConfigerationBuilder.java 
- * @Date: 2015年6月29日 
- * @Author: 黄超（huangchaohz）
- */
 
 /**
- *  @Describe:
+ *  Configeration Builder
  */
 public class ConfigerationBuilder {
 	

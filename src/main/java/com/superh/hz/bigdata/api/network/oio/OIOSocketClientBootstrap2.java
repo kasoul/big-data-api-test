@@ -10,18 +10,10 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** 
- * @Project: network-test
- * @File: OIOSocketClientBootstrap2.java 
- * @Date: 2015年10月19日 
- * @Author: 黄超（huangchaohz）
- * @Copyright: 版权所有 (C) 2015 中国移动 杭州研发中心. 
- *
- * @注意：本内容仅限于中国移动内部传阅，禁止外泄以及用于其他的商业目的 
- */
 
 /**
- *  @Describe:在一个Socket里持续发送数据到ServerSocket,知道接收到服务器发送的OK
+ *  在一个Socket里持续发送数据到ServerSocket,知道接收到服务器发送的OK
+ *  2015-10-19
  */
 public class OIOSocketClientBootstrap2 {
 	private static final Logger logger = LoggerFactory.getLogger(OIOSocketClientBootstrap2.class);
@@ -33,13 +25,6 @@ public class OIOSocketClientBootstrap2 {
 		clientBootstrap.run();
 	}
 
-	/** 
-	  * @description 
-	  * @author 黄超(huangchaohz)
-	  * @date 2015年10月19日
-	  * @param 
-	  * @return 
-	  */
 	private void run() {	
 		while (true) {    
 	    	Socket socket = null;  

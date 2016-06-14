@@ -16,16 +16,9 @@ import kafka.javaapi.consumer.ConsumerConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-/** 
- * @Project: big-apple-api-test
- * @File: KafkaConsumerA.java 
- * @Date: 2016年2月14日 
- * @Author: 黄超（huangchaohz）
- */
-
 /**
- *  @Describe:
+ *  消费者组
+ *  2016-2-15
  */
 public class KafkaConsumerA {
 	private static final Logger logger = LoggerFactory.getLogger(KafkaConsumerA.class);
@@ -53,13 +46,7 @@ public class KafkaConsumerA {
         this.topic = topic;
 	}
 
-	/**
-	  * @describe 
-	  * @author 黄超(huangchaohz)
-	  * @date 2016年2月14日
-	  * @param 
-	  * @return 
-	  */
+	
 	private ConsumerConfig createConsumerConfig(String zookeeper, String groupId) {
 		 Properties props = new Properties();
 	     props.put("zookeeper.connect", zookeeper);
@@ -109,8 +96,8 @@ public class KafkaConsumerA {
 		
 	}
 	
-	 public void shutdown() {
+	public void shutdown() {
 	        if (consumer != null) consumer.shutdown();
 	        if (executor != null) executor.shutdown();
-	    }
+	}
 }

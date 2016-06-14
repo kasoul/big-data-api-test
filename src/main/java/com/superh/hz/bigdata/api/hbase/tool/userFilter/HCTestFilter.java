@@ -10,15 +10,9 @@ import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.FilterBase;
 
-/** 
- * @Project: big-apple-api-test
- * @File: HCTestFilter.java 
- * @Date: 2015年2月3日 
- * @Author: 黄超（huangchaohz）
- */
-
 /**
- *  @Describe: 测试filter
+ *  测试filter
+ *  2015-2-3
  */
 public class HCTestFilter extends FilterBase {
 

@@ -6,15 +6,10 @@ import org.slf4j.LoggerFactory;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 
-/** 
- * @Project: big-apple-api-test
- * @File: ConsumerAThread.java 
- * @Date: 2016年2月15日 
- * @Author: 黄超（huangchaohz）
- */
 
 /**
- *  @Describe:单个消费者线程
+ *  单个消费者线程
+ *  2016-2-15
  */
 public class ConsumerAThread implements Runnable{
 	

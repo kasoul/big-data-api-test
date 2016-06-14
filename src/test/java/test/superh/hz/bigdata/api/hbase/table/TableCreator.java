@@ -1,4 +1,4 @@
-package cmcc.zyhy.hbase.table;
+package test.superh.hz.bigdata.api.hbase.table;
 
 import java.io.IOException;
 
@@ -11,22 +11,12 @@ import org.apache.hadoop.hbase.ZooKeeperConnectionException;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.io.compress.Compression;
 
-/** 
- *
- * @Project: hbase-accessor
- * @File: TableCreator.java 
- * @Date: 2015年4月3日 
- * @Author: 黄超（huangchaohz）
- * @Copyright: 版权所有 (C) 2015 中国移动 杭州研发中心. 
- *
- * @注意：本内容仅限于中国移动内部传阅，禁止外泄以及用于其他的商业目的 
- */
-
 /**
- *  @Describe:生成数据表
+ *  2015-4-3
  */
 public class TableCreator {
 	private static HBaseAdmin admin = null;
+	private static String tableName = "test_table_1";
 	
 	public static void main(String args[]){
 		initAdmin();
@@ -54,19 +44,19 @@ public class TableCreator {
 	}
 	
 	private static void create_user_month_bill_table() throws IOException{
-		if(admin.tableExists("user_month_bill_table")){
-			admin.disableTable("user_month_bill_table");
-			admin.deleteTable("user_month_bill_table");
+		if(admin.tableExists(tableName)){
+			admin.disableTable(tableName);
+			admin.deleteTable(tableName);
 		}
-		System.out.println(admin.tableExists("user_month_bill_table"));
-		HTableDescriptor desc = new HTableDescriptor("user_month_bill_table");
-		HColumnDescriptor coldef = new HColumnDescriptor("bill");
+		System.out.println(admin.tableExists(tableName));
+		HTableDescriptor desc = new HTableDescriptor(tableName);
+		HColumnDescriptor coldef = new HColumnDescriptor("cf_1");
 		coldef.setMaxVersions(6);
 		coldef.setCompressionType(Compression.Algorithm.SNAPPY);
 		desc.addFamily(coldef);
 		admin.createTable(desc);
-		System.out.println(admin.tableExists("user_month_bill_table"));
-		System.out.println(admin.isTableAvailable("user_month_bill_table"));
+		System.out.println(admin.tableExists(tableName));
+		System.out.println(admin.isTableAvailable(tableName));
 	}
 
 }

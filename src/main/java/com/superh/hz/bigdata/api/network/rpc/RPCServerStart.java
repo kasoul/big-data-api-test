@@ -6,9 +6,7 @@ import org.apache.hadoop.ipc.Server;
  
 import java.io.IOException;
  
-/**
- * Created by zhanglijun on 7/11/15.
- */
+
 public class RPCServerStart {
     public static void main(String[] args) throws IOException {
         Configuration conf = new Configuration();

@@ -19,7 +19,8 @@ import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.util.Bytes;
 
 /**
- *  @Describe: java clinet for HBase
+ *  Java clinet for HBase
+ *  2015-2-3
  */
 public class HBaseClient {
 	
@@ -41,13 +42,10 @@ public class HBaseClient {
 		try {
 			hbaseClient =  new HBaseClient(conf);
 		} catch (MasterNotRunningException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ZooKeeperConnectionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return hbaseClient;
@@ -58,13 +56,10 @@ public class HBaseClient {
 		try {
 				hbaseClient =  new HBaseClient();
 		} catch (MasterNotRunningException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ZooKeeperConnectionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return hbaseClient;

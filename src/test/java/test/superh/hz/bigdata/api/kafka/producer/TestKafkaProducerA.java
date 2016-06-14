@@ -3,25 +3,11 @@ package test.superh.hz.bigdata.api.kafka.producer;
 import com.superh.hz.bigdata.api.kafka.consumer.KafkaConsumerA;
 import com.superh.hz.bigdata.api.kafka.producer.KafkaProducerA;
 
-/** 
- * @Project: big-apple-api-test
- * @File: TestKafkaProducerA.java 
- * @Date: 2015年7月18日 
- * @Author: 黄超（huangchaohz）
- */
-
 /**
- *  @Describe:
+ * 2015-7-18
  */
 public class TestKafkaProducerA {
 
-	/**
-	 * @description 
-	 * @author 黄超(huangchaohz)
-	 * @date 2015年7月18日
-	 * @param 
-	 * @return 
-	 */
 	public static void main(String[] args) {
 		testKafkaProducerA();
 		//testKafakaConsumerA();
