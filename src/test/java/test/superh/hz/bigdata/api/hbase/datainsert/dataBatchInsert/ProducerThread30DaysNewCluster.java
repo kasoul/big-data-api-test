@@ -1,4 +1,4 @@
-package cmcc.zyhy.hbase.datainsert.dataBatchInsert;
+package test.superh.hz.bigdata.api.hbase.datainsert.dataBatchInsert;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,9 +15,9 @@ import com.superh.hz.bigdata.api.hbase.dao.HBaseDataManager;
 /**
  *  2014-11-28
  */
-public class ProducerThread30Days extends Thread {
+public class ProducerThread30DaysNewCluster extends Thread {
 	//private static final Log LOG = LogFactory.getLog(ProducerThreadA.class);
-	private static final Logger LOG = LoggerFactory.getLogger(ProducerThread30Days.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ProducerThread30DaysNewCluster.class);
 	private HBaseDataManager hbaseDataManager = HBaseDataManager.getHBaseDataManager("user_position_table");
 	private SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 	private Calendar cal = null;
@@ -30,12 +30,14 @@ public class ProducerThread30Days extends Thread {
 	String cellid = "5" + random_4len_string;
 	String lacCell = "18db-" + random_3len_string;
 	
-	public ProducerThread30Days(Calendar cal){
+	public ProducerThread30DaysNewCluster(Calendar cal,int x){
 		this.cal = cal;
 		this.cal.set(Calendar.HOUR_OF_DAY, 0);
 		this.cal.set(Calendar.MINUTE, 0);
 		this.cal.set(Calendar.SECOND, 0);
 		super.setName("thread-"+format.format(cal.getTime()));
+		this.x = x;
+		super.setName("thread-"+x);
 		//System.out.println(this.getName()+":"+ format.format(this.cal.getTime()));
 	}
 	
@@ -46,15 +48,17 @@ public class ProducerThread30Days extends Thread {
 		long start = System.currentTimeMillis();
 		List<Put> puts = new ArrayList<Put>();
 		//System.out.println(this.getName()+":::"+ format.format(this.cal.getTime()));
-		for (int j = 0; j < 1440; j++) {
-					Integer call = 64000000;
+		for (int j = 0; j < 48; j++) {
+					Integer call = 10000000;
 					
 					for (int i = 0; i < 500; i++) {	
 						String phonenum = "188" + String.valueOf(call);
 						String timestamp = format.format(cal.getTime());
 						double lat = 30.278121247584 + Math.random()*0.1+x*0.001;
 						String lacCoordinate = "120.16809977789," + String.valueOf(lat);
-						
+						String lacCell_test = "4004-4444, 4002-1111, 4004-1111, 4002-2222, 4004-2222, 4003-2222, 4004-3333, 4003-3333, 4001-1111, 4003-1111";
+						String[] lacCellArray = lacCell_test.split(",");
+						int index = (int) (Math.random() * lacCellArray.length);
 						String rowkey = phonenum + "-" + timestamp;
 						
 						Put put = new Put(rowkey.getBytes());
@@ -68,17 +72,18 @@ public class ProducerThread30Days extends Thread {
 						put.add(UserPositionTableColumnsUtil.CF_POSITION, UserPositionTableColumnsUtil.QL_FLAG, Bytes.toBytes("0"));
 						put.add(UserPositionTableColumnsUtil.CF_POSITION, UserPositionTableColumnsUtil.QL_RES, Bytes.toBytes("0"));
 						put.add(UserPositionTableColumnsUtil.CF_POSITION, UserPositionTableColumnsUtil.QL_OPPNUMBER, Bytes.toBytes("0"));
-						put.add(UserPositionTableColumnsUtil.CF_POSITION, UserPositionTableColumnsUtil.QL_LACCELL, Bytes.toBytes(lacCell));
+						put.add(UserPositionTableColumnsUtil.CF_POSITION, UserPositionTableColumnsUtil.QL_DURATION, Bytes.toBytes("30"));
+						put.add(UserPositionTableColumnsUtil.CF_POSITION, UserPositionTableColumnsUtil.QL_LACCELL, Bytes.toBytes(lacCellArray[index]));
 						put.add(UserPositionTableColumnsUtil.CF_POSITION, UserPositionTableColumnsUtil.QL_LACCOORDINATE, Bytes.toBytes(lacCoordinate));
 						
 						puts.add(put);
 						call = call + 1;
 					}
-					if(puts.size() >= 10000){
+					if(puts.size() >= 2000){
 						hbaseDataManager.insertDataBatch(puts);
 						hbaseDataManager.flushCommits();
 						LOG.info("[" + format.format(cal.getTime()) + "]: " + 
-								 puts.size() + " records has been insert into user_position_table.");
+								 puts.size() + " records has been insert into user_position_table_test.");
 						puts.clear();
 						try {
 							Thread.sleep(3000L);
@@ -87,17 +92,17 @@ public class ProducerThread30Days extends Thread {
 							e.printStackTrace();
 						}
 					}
-			cal.add(Calendar.MINUTE,1);
+			cal.add(Calendar.MINUTE,30);
 		}
-		cal.add(Calendar.MINUTE,-1);
+		cal.add(Calendar.MINUTE,-30);
 		hbaseDataManager.insertDataBatch(puts);
 		hbaseDataManager.flushCommits();
 		LOG.info("[" + format.format(cal.getTime()) + "]: " + 
-				 puts.size() + " records has been insert into user_position_table.");
+				 puts.size() + " records has been insert into user_position_table_test.");
 		puts.clear();
 		
 		LOG.info("::current time is [" + format.format(cal.getTime()) + "]");
-		LOG.info("::current records inserted is [" + 1440*500 + "]");
+		LOG.info("::current records inserted is [" + 48*500 + "]");
 		long end = System.currentTimeMillis();
 		LOG.info("@@@@@@@@@@@@@producer complete! Total cost[" + (end - start)/1000 + "]s.");
 		

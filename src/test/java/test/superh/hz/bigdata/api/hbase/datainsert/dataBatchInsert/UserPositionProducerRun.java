@@ -1,9 +1,8 @@
-package cmcc.zyhy.hbase.datainsert.dataBatchInsert;
+package test.superh.hz.bigdata.api.hbase.datainsert.dataBatchInsert;
 
 import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

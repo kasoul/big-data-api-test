@@ -1,4 +1,4 @@
-package cmcc.zyhy.hbase.datainsert.dataBatchInsert;
+package test.superh.hz.bigdata.api.hbase.datainsert.dataBatchInsert;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,19 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import com.superh.hz.bigdata.api.hbase.dao.HBaseDataManager;
 
-/**
- * 
- * @Project: hbase-accessor
- * @File: ProducerThread50WAnd30Days.java
- * @Date: 2014年11月28日
- * @Author: 黄超（huangchaohz）
- * @Copyright: 版权所有 (C) 2014 中国移动 杭州研发中心.
- *
- * @注意：本内容仅限于中国移动内部传阅，禁止外泄以及用于其他的商业目的
- */
-public class ProducerThread50WAnd30Days extends Thread {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ProducerThread50WAnd30Days.class);
+public class ProducerThread500UsersAnd30Days extends Thread {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ProducerThread500UsersAnd30Days.class);
 	private HBaseDataManager hbaseDataManager = HBaseDataManager.getHBaseDataManager("user_position_table");
 	private SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 	private Calendar cal = null;
@@ -38,7 +29,7 @@ public class ProducerThread50WAnd30Days extends Thread {
 	String cellid = "5" + random_4len_string;
 	String lacCell = "18db-" + random_3len_string;
 	
-	public ProducerThread50WAnd30Days(Calendar cal,int x){
+	public ProducerThread500UsersAnd30Days(Calendar cal,int x){
 		this.cal = cal;
 		this.x = x;
 		super.setName("thread-"+x);

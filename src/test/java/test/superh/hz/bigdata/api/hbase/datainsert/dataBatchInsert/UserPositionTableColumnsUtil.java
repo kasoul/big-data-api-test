@@ -1,10 +1,10 @@
-package cmcc.zyhy.hbase.datainsert.dataBatchInsert;
+package test.superh.hz.bigdata.api.hbase.datainsert.dataBatchInsert;
 
 import org.apache.hadoop.hbase.util.Bytes;
 
-public class SnappyTestColumnsUtil {
+public class UserPositionTableColumnsUtil {
 	// user_position_table表对应的列族
-	public static final byte[] CF_POSITION = Bytes.toBytes("colfam");
+	public static final byte[] CF_POSITION = Bytes.toBytes("position");
 
 	
 	// user_position_table表对应的列限定符
@@ -18,6 +18,8 @@ public class SnappyTestColumnsUtil {
 	public static final byte[] QL_FLAG = Bytes.toBytes("flag");
 	public static final byte[] QL_RES = Bytes.toBytes("res");
 	public static final byte[] QL_OPPNUMBER = Bytes.toBytes("oppNumber");
+	public static final byte[] QL_DURATION = Bytes.toBytes("duration");
 	public static final byte[] QL_LACCELL = Bytes.toBytes("lacCell");
 	public static final byte[] QL_LACCOORDINATE = Bytes.toBytes("lacCoordinate");
+	
 }
