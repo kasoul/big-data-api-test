@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); you 
+	may not use this file except in compliance with the License. You may obtain 
+	a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless 
+	required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. 
+	See accompanying LICENSE file. -->
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+	<property>
+		<name>fs.hdfs.impl</name>
+		<value>org.apache.hadoop.hdfs.DistributedFileSystem</value>
+		<description>The FileSystem for hdfs: uris.</description>
+	</property>
+
+	<property>
+		<name>fs.file.impl</name>
+		<value>org.apache.hadoop.fs.LocalFileSystem</value>
+		<description>The FileSystem for system: uris.</description>
+	</property>
+	<property>
+		<name>fs.defaultFS</name>
+		<value>hdfs://node8.ssjs/</value>
+	</property>
+	<property>
+		<name>fs.default.name </name>
+		<value>hdfs://node8.ssjs:8020</value>
+	</property>
+	<property>
+		<name>hadoop.proxyuser.mapred.groups</name>
+		<value>*</value>
+	</property>
+	<property>
+		<name>hadoop.proxyuser.mapred.hosts</name>
+		<value>*</value>
+	</property>
+	<!-- Add Date 2015-2-11 -->
+	<property>
+		<name>io.compression.codecs</name>
+		<value>org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec
+		</value>
+	</property>
+
+	<property>
+		<name>io.file.buffer.size</name>
+		<value>65535</value>
+	</property>
+	<!-- Add Date 2015-3-4 -->
+	<property>
+		<name>dfs.permissions</name>
+		<value>false</value>
+	</property>
+	<!-- Add Date 2015-3-5 <property> <name>io.native.lib.available</name> <value>true</value> 
+		</property> -->
+</configuration>

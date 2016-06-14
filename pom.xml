@@ -1,0 +1,261 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.superh.hz</groupId>
+	<artifactId>big-apple-api-test</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	
+	<name>big data api test proj</name>
+
+	<properties>
+	
+		<!-- <hbaseVersion2>0.94.15-cdh4.7.0</hbaseVersion2>
+		<hadoopVersion2>2.0.0-cdh4.7.0</hadoopVersion2> -->
+		
+		<!-- <hbaseVersion>0.98.6-cdh5.2.1</hbaseVersion>
+		<hadoopVersion>2.6.0-cdh5.2.1</hadoopVersion>
+		<hiveVersion>0.13.1-cdh5.2.1</hiveVersion> -->
+		
+		
+		<hbaseVersion>1.0.0</hbaseVersion>
+		<hadoopVersion>2.6.1</hadoopVersion>
+		<hiveVersion>1.2.1</hiveVersion>
+		
+		<zookeeperVersion>3.4.6</zookeeperVersion>
+		
+		<kafkaVersion>0.9.0.1</kafkaVersion>
+		
+		<redisVersion>2.7.1</redisVersion>
+		
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+		<!-- hadoop dependcies -->
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-client</artifactId>
+			<version>${hadoopVersion}</version>
+			<exclusions>
+				<exclusion>
+    				<groupId>org.mortbay.jetty</groupId>
+    				<artifactId>jetty-util</artifactId>
+				</exclusion>
+				<exclusion>
+    				<groupId>jdk.tools</groupId>
+    				<artifactId>jdk.tools</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- end hadoop dependcies -->
+		
+		<!-- hive dependcies -->
+		<dependency>
+			<groupId>org.apache.hive</groupId>
+			<artifactId>hive-jdbc</artifactId>
+			<version>${hiveVersion}</version>
+			<exclusions>
+				<exclusion>
+    				<groupId>org.mortbay.jetty</groupId>
+    				<artifactId>jetty-util</artifactId>
+				</exclusion>
+				<exclusion>
+    				<groupId>org.mortbay.jetty</groupId>
+    				<artifactId>jetty</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- end hive dependcies -->
+		
+		<!-- hbase dependcies -->
+		<dependency>
+			<groupId>org.apache.hbase</groupId>
+			<artifactId>hbase-client</artifactId>
+			<version>${hbaseVersion}</version>
+			<exclusions>
+				<exclusion>
+    				<groupId>jdk.tools</groupId>
+    				<artifactId>jdk.tools</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- end hive dependcies -->
+		
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.11</artifactId>
+			<version>${kafkaVersion}</version>
+		</dependency>
+		
+		<dependency>  
+            <groupId>org.apache.zookeeper</groupId>  
+            <artifactId>zookeeper</artifactId>  
+            <version>${zookeeperVersion}</version>  
+        </dependency>
+		
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${redisVersion}</version>
+		</dependency> 
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- 设置源文件编码方式 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<defaultLibBundleDir>lib</defaultLibBundleDir>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>cmcc.zyhy.hbase.dao.lbs.userpositiontable.UserPositionProducerRun</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<!-- 拷贝依赖的jar包到lib目录 -->
+			 <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>
+								${project.build.directory}/lib
+							</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- 解决资源文件的编码问题 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<!-- 打包source文件为jar文件 -->
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<attach>true</attach>
+					<encoding>UTF-8</encoding>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>
+				<excludes>
+					<exclude>**/.svn/*</exclude>
+				</excludes>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>
+				<excludes>
+					<exclude>**/.svn/*</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+					<include>**/*.xls</include>
+				</includes>
+				<excludes>
+					<exclude>**/.svn/*</exclude>
+				</excludes>
+			</testResource>
+			<testResource>
+				<directory>src/test/java</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+				<excludes>
+					<exclude>**/.svn/*</exclude>
+				</excludes>
+			</testResource>
+			<testResource>
+				<directory>src/test/groovy</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+				<excludes>
+					<exclude>**/.svn/*</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+	</build>
+</project>
