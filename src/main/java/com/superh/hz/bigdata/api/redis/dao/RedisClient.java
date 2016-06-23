@@ -24,15 +24,15 @@ public class RedisClient {
 	}
 
 	public static void getRedisInstanceInfo() {
-		Jedis jedis = new Jedis("172.16.4.113", 6379);
+		Jedis jedis = new Jedis("127.0.0.1", 6379);
 		System.out.println(jedis.exists("huangchaotest"));
 
 	}
 
 	public static void testSetAndGet() {
 		Set<HostAndPort> nodes = new HashSet<HostAndPort>();
-		HostAndPort hostAndport = new HostAndPort("192.168.11.219", 6379);
-		HostAndPort hostAndport2 = new HostAndPort("192.168.11.217", 6380);
+		HostAndPort hostAndport = new HostAndPort("127.0.0.1", 6379);
+		HostAndPort hostAndport2 = new HostAndPort("127.0.0.1", 6380);
 		nodes.add(hostAndport);
 		nodes.add(hostAndport2);
 		JedisCluster jedisCluster = new JedisCluster(nodes);

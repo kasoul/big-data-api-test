@@ -117,9 +117,9 @@ public class HDFSClient {
 			FSDataOutputStream fsout = hdfs.create(path);
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fsout));
 			StringBuffer sb = new StringBuffer();
-			sb.append("4,hechan,hechan");
+			sb.append("4,AAA,AAA");
 			sb.append("\n");
-			sb.append("5,linqingyou,linqingyou");
+			sb.append("5,BBB,BBB");
 			sb.append("\n");
 			bw.write(sb.toString());
 			bw.flush();

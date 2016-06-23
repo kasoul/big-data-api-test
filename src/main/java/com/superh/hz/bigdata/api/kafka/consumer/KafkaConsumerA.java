@@ -84,7 +84,8 @@ public class KafkaConsumerA {
 	         threadNumber++;
 	    }
 	    
-		/*for(KafkaStream<byte[], byte[]> ks : streams){
+	    /*单线程消费
+		for(KafkaStream<byte[], byte[]> ks : streams){
 			
 			 ConsumerIterator<byte[], byte[]> it = ks.iterator();
 		     while (it.hasNext()){

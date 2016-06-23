@@ -14,7 +14,7 @@ public class TestKafkaConsumerA {
 	}
 	
 	public static void testKafakaConsumerA(){
-		String zookeeperIp = "172.30.137.12:2181";
+		String zookeeperIp = "127.0.0.1:2181";
 		String topic = tableTopic;
 		KafkaConsumerA consumerA = new KafkaConsumerA(zookeeperIp,"grouphc1",topic);
 		consumerA.getData();

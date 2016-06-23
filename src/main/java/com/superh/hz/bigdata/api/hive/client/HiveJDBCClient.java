@@ -35,7 +35,7 @@ public class HiveJDBCClient {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		Connection con = DriverManager.getConnection("jdbc:hive://node8.ssjs:10000/default", "hadoop", "");
+		Connection con = DriverManager.getConnection("jdbc:hive://namenode:10000/default", "hadoop", "");
 		Statement stmt = con.createStatement();
 		stmt.executeQuery("use huangchaotest");
 		/*stmt.execute("drop table if exists " + tableName);
@@ -63,7 +63,7 @@ public class HiveJDBCClient {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		Connection con = DriverManager.getConnection("jdbc:hive://node8.ssjs:10000/huangchaotest", "hadoop", "");
+		Connection con = DriverManager.getConnection("jdbc:hive://namenode:10000/huangchaotest", "hadoop", "");
 		Statement stmt = con.createStatement();
 		stmt.executeQuery("use huangchaotest");
 		//stmt.executeQuery("drop table if exists test_external");
@@ -91,7 +91,7 @@ public class HiveJDBCClient {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		Connection con = DriverManager.getConnection("jdbc:hive://node8.ssjs:10000/huangchaotest", "hadoop", "");
+		Connection con = DriverManager.getConnection("jdbc:hive://namenode:10000/huangchaotest", "hadoop", "");
 		Statement stmt = con.createStatement();
 		//stmt.executeQuery("use huangchaotest");
 		//从hdfs上导入数据
@@ -116,7 +116,7 @@ public class HiveJDBCClient {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		Connection con = DriverManager.getConnection("jdbc:hive://node8.ssjs:10000/test2", "hadoop", "");
+		Connection con = DriverManager.getConnection("jdbc:hive://namenode:10000/test2", "hadoop", "");
 		Statement stmt = con.createStatement();
 		//stmt.executeQuery("use huangchaotest");
 		//String selectSql = "select count(*) from test1";
@@ -140,7 +140,7 @@ public class HiveJDBCClient {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		Connection con = DriverManager.getConnection("jdbc:hive://node8.ssjs:10000/test2", "hadoop", "");
+		Connection con = DriverManager.getConnection("jdbc:hive://namenode:10000/test2", "hadoop", "");
 		Statement stmt = con.createStatement();
 		stmt.executeQuery("use huangchaotest");
 		String selectSql = "insert overwrite table test2 select * from test2 where 1=0";

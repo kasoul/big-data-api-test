@@ -32,7 +32,7 @@ public class CommonZKClient {
 	
 	public static void testGetRootZnode() throws IOException, KeeperException, InterruptedException {
 		 // 创建一个与服务器的连接
-		 ZooKeeper zk = new ZooKeeper("192.168.12.48:" + "2181", 
+		 ZooKeeper zk = new ZooKeeper("192.168.0.1:" + "2181", 
 		        3000, new Watcher() { 
 		            // 监控所有被触发的事件
 		            public void process(WatchedEvent event) { 
@@ -61,7 +61,7 @@ public class CommonZKClient {
 
 	public static void test() throws IOException, KeeperException, InterruptedException {
 		 // 创建一个与服务器的连接
-		 ZooKeeper zk = new ZooKeeper("192.168.16.2:" + "2181", 
+		 ZooKeeper zk = new ZooKeeper("192.168.0.1:" + "2181", 
 		        30, new Watcher() { 
 		            // 监控所有被触发的事件
 		            public void process(WatchedEvent event) { 
