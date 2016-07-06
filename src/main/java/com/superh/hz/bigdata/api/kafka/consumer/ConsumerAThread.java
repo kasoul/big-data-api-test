@@ -19,8 +19,8 @@ public class ConsumerAThread implements Runnable{
     private int m_threadNumber;  
    
     public ConsumerAThread(KafkaStream<byte[], byte[]> a_stream, int a_threadNumber) {  
-        m_threadNumber = a_threadNumber;  
-        m_stream = a_stream;  
+        m_threadNumber = a_threadNumber; 
+        m_stream = a_stream; 
     }  
    
     public void run() {  
