@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- 用户工作地分析配置文件. -->
+<configuration>
+<property>
+<name>dfs.namenode.name.dir</name>
+<value>file:///data/dfs/nn</value>
+</property>
+</configuration>

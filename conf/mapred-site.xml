@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- map-reduce作业参数配置 -->
+<configuration>
+	<!-- map task 推测执行,如果task1执行太慢，会启动task2，谁先执行完停止另一个，以空间换时间 -->
+	<property>
+		<name>mapreduce.map.speculative</name>
+		<value>false</value>
+	</property>
+
+	<!-- reduce task推测执行 -->
+	<property>
+		<name>mapreduce.reduce.speculative</name>
+		<value>false</value>
+	</property>
+
+	<!-- reduce task会在一定百分比的map执行结束之后启动 -->
+	<property>
+		<name>mapreduce.job.reduce.slowstart.completedmaps</name>
+		<value>0.05</value>
+	</property>
+
+	<!-- map输出文件是否压缩 -->
+	<!-- <property>
+		<name>mapreduce.map.output.compress</name>
+		<value>true</value>
+	</property> -->
+	
+	<!-- map或者reduce的输出超时时间 -->
+	<property>
+		<name>mapreduce.task.timeout</name>
+		<value>2700000</value>
+	</property>
+	
+	<!-- map输出文件的压缩处理程序-->
+	<!-- mapreduce.map.output.compress属性为false时该属性无效 -->
+	<!-- <property>
+		<name>mapreduce.map.output.compress.codec</name>
+		<value>org.apache.hadoop.io.compress.SnappyCodec,org.apache.hadoop.io.compress.CompressionCodec</value>
+	</property> -->
+	
+	<!-- redis集群ip -->
+	<property>
+		<name>redisIP</name>
+		<value>192.168.12.45</value>
+	</property>
+
+	<!-- redis集群端口 -->
+	<property>
+		<name>redisPort</name>
+		<value>6379</value>
+	</property>
+
+	<!-- scan单次请求的缓存条数 -->
+	<property>
+		<name>hbase.scan.cachingNum</name>
+		<value>5000</value>
+	</property>
+</configuration>

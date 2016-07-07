@@ -16,14 +16,14 @@ public class TestKafkaProducerA {
 	}
 	
 	public static void testKafkaProducerA(){
-		String brokerIp = "node2";
+		String brokerIp = "node3";
 		String topic = "hctest";
 		KafkaProducerA producer = new KafkaProducerA(brokerIp,topic);
 		JSONObject jsonIn = new JSONObject();
-		jsonIn.element("name", "Jack");
-		jsonIn.element("age", "7");
-		jsonIn.element("address", "Center Park");
-		jsonIn.element("phone", "");
+		jsonIn.element("name", "Kevin");
+		jsonIn.element("age", "12");
+		jsonIn.element("address", "Hubei middle road 7#");
+		jsonIn.element("phone", "13566666666");
 		//JSONObject jsonOut = JSONObject.fromObject(jsonIn.toString());
 		//System.out.println(jsonOut.getString("name"));
 		//System.out.println(jsonOut.getString("address"));

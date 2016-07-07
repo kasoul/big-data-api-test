@@ -22,6 +22,7 @@
 		<hbaseVersion>1.0.0</hbaseVersion>
 		<hadoopVersion>2.6.1</hadoopVersion>
 		<hiveVersion>1.2.1</hiveVersion>
+		<goraVersion>0.6</goraVersion>
 		
 		<zookeeperVersion>3.4.6</zookeeperVersion>
 		
@@ -95,7 +96,81 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- end hive dependcies -->
+		<dependency>
+			<groupId>org.apache.hbase</groupId>
+			<artifactId>hbase-server</artifactId>
+			<version>${hbaseVersion}</version>
+			<!-- <exclusions> 
+			    <exclusion>  
+                    <groupId>jdk.tools</groupId>  
+                    <artifactId>jdk.tools</artifactId>  
+                </exclusion>   				        		
+        		<exclusion>  
+            		<groupId>org.mortbay.jetty</groupId>  
+            		<artifactId>jetty</artifactId>  
+        		</exclusion>
+        		<exclusion>  
+            		<groupId>org.mortbay.jetty</groupId>  
+            		<artifactId>jetty-util</artifactId>  
+        		</exclusion>
+        		<exclusion>  
+            		<groupId>org.mortbay.jetty</groupId>  
+            		<artifactId>jetty-sslengine</artifactId>  
+        		</exclusion> 
+    		</exclusions>   -->
+		</dependency>
+		<!-- end hbase dependcies -->
+		
+		<dependency>
+			<groupId>org.apache.gora</groupId>
+			<artifactId>gora-hbase</artifactId>
+			<version>${goraVersion}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.hbase</groupId>
+					<artifactId>hbase</artifactId>
+				</exclusion>
+				
+				<exclusion>
+					<groupId>org.apache.hadoop</groupId>
+					<artifactId>hadoop</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.hadoop</groupId>
+					<artifactId>hadoop-test</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xml-apis</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>jsp-2.1</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>jsp-api-2.1</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>servlet-api-2.5</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro</artifactId>
+			<version>1.7.6</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
