@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.spuerh.hz.bigdata.mr.hbase.job.hbaseSchema.LbsResultTable;
-import com.spuerh.hz.bigdata.mr.util.common.EncryptUtil;
 
 public class UserShiftMonthAnalysisReducer extends TableReducer<Text, Text, ImmutableBytesWritable>{
 
@@ -50,7 +49,8 @@ public class UserShiftMonthAnalysisReducer extends TableReducer<Text, Text, Immu
 				tw2+=timeToSecond(periods[3]);
 				th3+=timeToSecond(periods[4]);
 			}
-			String rowKey = EncryptUtil.encrypt(key.toString(), "MD5");
+			//String rowKey = EncryptUtil.encrypt(key.toString(), "MD5");
+			String rowKey = key.toString();
 			Put put = new Put(rowKey.getBytes());
 			put.addColumn(LbsResultTable.CF_TEMPINFO, LbsResultTable.QL_WORKMODE, "0".getBytes());
 			put.addColumn(LbsResultTable.CF_TEMPINFO, LbsResultTable.QL_ONWORKPERIOD, (secondToTime(th2/dayShiftList.size())+"-"+secondToTime(tw1/dayShiftList.size())).getBytes());
@@ -71,7 +71,8 @@ public class UserShiftMonthAnalysisReducer extends TableReducer<Text, Text, Immu
 				th2+=timeToSecond(periods[3]);
 				tw3+=timeToSecond(periods[4]);
 			}
-			String rowKey = EncryptUtil.encrypt(key.toString(), "MD5");
+			
+			String rowKey = key.toString();
 			Put put = new Put(rowKey.getBytes());
 			put.addColumn(LbsResultTable.CF_TEMPINFO, LbsResultTable.QL_WORKMODE, "1".getBytes());
 			put.addColumn(LbsResultTable.CF_TEMPINFO, LbsResultTable.QL_ONWORKPERIOD, (secondToTime(th2/nightShiftList.size())+"-"+secondToTime(tw3/nightShiftList.size())).getBytes());

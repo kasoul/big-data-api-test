@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.spuerh.hz.bigdata.mr.hbase.job.hbaseSchema.LbsResultTable;
-import com.spuerh.hz.bigdata.mr.util.common.EncryptUtil;
 
 public class UserShiftDayAnalysisReducer extends
 		Reducer<Text, Text, Text, Text> {
@@ -51,13 +50,13 @@ public class UserShiftDayAnalysisReducer extends
 	protected void reduce(Text key, Iterable<Text> values, Context context)
 			throws IOException, InterruptedException {
 		
-		String ROW_KEY = key.toString().split("-")[0];
-		ROW_KEY = EncryptUtil.encrypt(ROW_KEY, "MD5");
-		if(userResidentAdderessMap.containsKey(ROW_KEY) && userWorkAdderessMap.containsKey(ROW_KEY)){
-			residentPlace = userResidentAdderessMap.get(ROW_KEY);
-			workPlace = userWorkAdderessMap.get(ROW_KEY);
+		String row_key = key.toString().split("-")[0];
+		//row_key = EncryptUtil.encrypt(row_key, "MD5");
+		if(userResidentAdderessMap.containsKey(row_key) && userWorkAdderessMap.containsKey(row_key)){
+			residentPlace = userResidentAdderessMap.get(row_key);
+			workPlace = userWorkAdderessMap.get(row_key);
 		}else{
-			Get get = new Get(ROW_KEY.getBytes());
+			Get get = new Get(row_key.getBytes());
 			Result result = hTable.get(get);
 			String[] residentLacCellList = null;
 			String[] workLacCellList = null;
@@ -65,20 +64,20 @@ public class UserShiftDayAnalysisReducer extends
 			if(residentLacCellListStr != null && !residentLacCellListStr.equals("")){
 				residentLacCellList = new String(residentLacCellListStr).split(";");//分割分开，获取最后一个
 				String residentPlaceNew = residentLacCellList[residentLacCellList.length-1].split(":")[1];
-				userResidentAdderessMap.put(ROW_KEY, residentPlaceNew);
+				userResidentAdderessMap.put(row_key, residentPlaceNew);
 				residentPlace = residentPlaceNew;
 			}else{
-				log.error("未查询到用户：" + ROW_KEY + "的居住地信息！");
+				log.error("未查询到用户：" + row_key + "的居住地信息！");
 				return;
 			}
 			byte[] workLacCellListStr = result.getValue(LbsResultTable.CF_TEMPINFO,LbsResultTable.QL_WORKLACCELLLIST);
 			if(workLacCellListStr != null && !workLacCellListStr.equals("")){
 				workLacCellList = new String(workLacCellListStr).split(";");//分割分开，获取最后一个
 				String workPlaceNew = workLacCellList[workLacCellList.length-1].split(":")[1];
-				userWorkAdderessMap.put(ROW_KEY, workPlaceNew);
+				userWorkAdderessMap.put(row_key, workPlaceNew);
 				workPlace = workPlaceNew;
 			}else{
-				log.error("未查询到用户：" + ROW_KEY + "的工作地信息！");
+				log.error("未查询到用户：" + row_key + "的工作地信息！");
 				return;
 			}
 		}
@@ -93,7 +92,7 @@ public class UserShiftDayAnalysisReducer extends
 			}
 		}
 		if(workDatas.size()<=0||residentDatas.size()<=0){
-			log.error("未找到该用户的有效位置信息，用户Number："+ROW_KEY);
+			log.error("未找到该用户的有效位置信息，用户Number：" + row_key);
 			return ;
 		}
 		Collections.sort(workDatas);//时间排序，list数据格式：timeStamp
