@@ -1,5 +1,5 @@
 
-package com.superh.hz.bigdata.api.network.rpc;
+package com.superh.hz.bigdata.api.network.hadoopRpc;
  
 import org.apache.hadoop.ipc.VersionedProtocol;
  

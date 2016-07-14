@@ -1,4 +1,4 @@
-package com.superh.hz.bigdata.api.network.rpc;
+package com.superh.hz.bigdata.api.network.hadoopRpc;
  
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ipc.RPC;
