@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -23,6 +24,10 @@ import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.hadoop.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.superh.hz.bigdata.api.kafka.consumer.ConsumerAThread;
 
 
 /**
@@ -30,23 +35,23 @@ import org.apache.hadoop.io.IOUtils;
  */
 public class HDFSClient {
 
+	private static final Logger logger = LoggerFactory.getLogger(HDFSClient.class);
+	
 	public static void main(String args[]) {
 		/*
 		 * System.out.println(System.getProperty("user.name"));
 		 * System.out.println(System.getenv("HADOOP_HOME"));
 		 * System.out.println(System.getenv("HADOOP_USER_NAME"));
 		 */
-		/*
-		 * Map<String, String> m = System.getenv(); for (Iterator<String> it =
-		 * m.keySet().iterator(); it.hasNext(); ) { String key = (String )
-		 * it.next(); String value = (String ) m.get(key);
-		 * System.out.println(key +":" +value); } System.out.println(
-		 * "--------------------------------------" );
-		 */
+		logger.info("aaa");
+		ServiceLoader<FileSystem> serviceLoader = ServiceLoader.load(FileSystem.class);
+		for(FileSystem  fs :serviceLoader){
+			System.out.println(fs.getScheme() + "---" + fs.getClass());
+		}
 		//String path = "/test/hdfstesthc/test1.dat";
 		//writeFile(path);
 		//listFiles("/test/hdfstesthc");
-		listFiles("/");
+		//listFiles("/");
 		//listFiles("/user/hive/warehouse/2015052613_test2_b893ebd2b91c4708a31fe6cde72f7a7d");
 		//readFile("/user/hive/warehouse/2015052613_test2_bb66e140d44e411f983b38731dd8af38/part-m-00000_copy_1");
 	}
@@ -55,6 +60,8 @@ public class HDFSClient {
 		try {
 			Configuration config = new Configuration();
 			FileSystem hdfs = FileSystem.get(config);
+			System.out.println(hdfs.getConf().get("fs.file.impl"));
+			System.out.println(hdfs.getConf().get("fs.hdfs.impl"));
 			Path path = new Path(hdfsPath);
 			// 列出目录下的子文件，不列出子目录
 			/*

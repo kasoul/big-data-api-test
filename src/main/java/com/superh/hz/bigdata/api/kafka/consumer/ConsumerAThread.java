@@ -13,7 +13,7 @@ import kafka.consumer.KafkaStream;
  */
 public class ConsumerAThread implements Runnable{
 	
-	private static final Logger logger = LoggerFactory.getLogger(KafkaConsumerA.class);
+	private static final Logger logger = LoggerFactory.getLogger(ConsumerAThread.class);
 	
 	private KafkaStream<byte[], byte[]> m_stream;  
     private int m_threadNumber;  

@@ -20,6 +20,7 @@ import kafka.javaapi.TopicMetadataRequest;
 import kafka.javaapi.consumer.SimpleConsumer;
 
 public class KafkaOffsetTool {
+	
 	public static void main(String[] args) {
 		Map<String, String> kafkaParams = new HashMap<String, String>();
 		String topic = "meta";
