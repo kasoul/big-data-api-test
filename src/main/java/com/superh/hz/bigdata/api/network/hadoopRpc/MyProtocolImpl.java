@@ -14,6 +14,7 @@ public class MyProtocolImpl implements MyProtocol {
 
     @Override
     public int add(int v1, int v2) throws IOException {
+    	System.out.println("v1=" + v1 + ",v2=" + v2);
         return v1 + v2;
     }
 

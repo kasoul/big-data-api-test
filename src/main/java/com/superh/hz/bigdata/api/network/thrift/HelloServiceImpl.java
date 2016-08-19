@@ -10,7 +10,7 @@ public class HelloServiceImpl implements Hello.Iface {
    @Override 
    public int helloInt(int para) throws TException { 
        try { 
-           Thread.sleep(20000); 
+           Thread.sleep(2000); 
        } catch (InterruptedException e) { 
            e.printStackTrace(); 
        } 
