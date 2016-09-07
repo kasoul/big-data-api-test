@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- *  在一个Socket里持续发送数据到ServerSocket,知道接收到服务器发送的OK
+ *  在一个Socket里持续发送数据到ServerSocket,直到接收到服务器发送的OK
  *  2015-10-19
  */
 public class OIOSocketClientBootstrap2 {
