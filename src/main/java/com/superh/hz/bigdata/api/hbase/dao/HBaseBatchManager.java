@@ -45,6 +45,19 @@ public class HBaseBatchManager {
 				bufferedMutatorParams);
 	}
 	
+	/** 批量更新 */
+	public void batchPut(List<Put> list){
+		for(Put put :list){
+			try {
+				mutator.mutate(put);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	/** 批量更新并且提交 */
 	public void batchPutFlush(List<Put> list){
 		
 		for(Put put :list){
@@ -54,25 +67,12 @@ public class HBaseBatchManager {
 				e.printStackTrace();
 			}
 		}
+		flush();
 		
 	}
 	
-	public void batchPut(List<Put> list){
-		for(Put put :list){
-			try {
-				mutator.mutate(put);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			mutator.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void batchDeleteFlush(List<Delete> list){
+	/** 批量删除 */
+	public void batchDelete(List<Delete> list){
 		
 		for(Delete delete :list){
 			try {
@@ -84,6 +84,22 @@ public class HBaseBatchManager {
 		
 	}
 	
+	/** 批量删除并且提交 */
+	public void batchDeleteFlush(List<Delete> list){
+		
+		for(Delete delete :list){
+			try {
+				mutator.mutate(delete);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		flush();
+		
+	}
+	
+	/** 提交 */
 	public void flush(){
 		try {
 			mutator.flush();
@@ -92,6 +108,7 @@ public class HBaseBatchManager {
 		}
 	}
 	
+	/** 关闭 */
 	public void close(){
 		try {
 			mutator.close();
