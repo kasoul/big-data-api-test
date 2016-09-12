@@ -7,13 +7,12 @@ import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.BufferedMutator;
 import org.apache.hadoop.hbase.client.BufferedMutatorParams;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
+import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.Table;
 
 /**
  * 数据操作方法，批量更新
@@ -46,12 +45,26 @@ public class HBaseBatchManager {
 				bufferedMutatorParams);
 	}
 	
-	public void updateWithPut(List<Put> list){
+	public void batchPut(List<Put> list){
 		for(Put put :list){
 			try {
 				mutator.mutate(put);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			mutator.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void batchDelete(List<Delete> list){
+		for(Delete delete :list){
+			try {
+				mutator.mutate(delete);
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -59,7 +72,6 @@ public class HBaseBatchManager {
 		try {
 			mutator.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -68,7 +80,6 @@ public class HBaseBatchManager {
 		try {
 			mutator.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -83,10 +94,9 @@ public class HBaseBatchManager {
 			put2.addColumn("cf1".getBytes(), "cq2".getBytes(), "testvalue2".getBytes());
 			puts.add(put1);
 			puts.add(put2);
-			hbm.updateWithPut(puts);
+			hbm.batchPut(puts);
 			hbm.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
