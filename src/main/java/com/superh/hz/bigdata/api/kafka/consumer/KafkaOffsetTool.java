@@ -21,19 +21,6 @@ import kafka.javaapi.consumer.SimpleConsumer;
 
 public class KafkaOffsetTool {
 	
-	public static void main(String[] args) {
-		Map<String, String> kafkaParams = new HashMap<String, String>();
-		String topic = "meta";
-		kafkaParams.put("metadata.broker.list","node1:9092,node2:9092,node3:9092,node4:9092");
-
-		//Map<TopicAndPartition, Long> map = getLastestOffset(kafkaParams,topic);
-		Map<TopicAndPartition, Long> map = getSmallestOffset(kafkaParams,topic);
-		for(TopicAndPartition tp: map.keySet()){
-			System.out.println(tp.topic() + "-" + tp.partition() + ":" + map.get(tp));
-		}
-		
-	}
-	
 	private static Map<TopicAndPartition, Long> getOffsetBeforeTimestamp(Map<String, String> kafkaParams, String topic, long whichTime) {
 
 		Map<TopicAndPartition, Long> mapTpls = new HashMap<TopicAndPartition, Long>();
@@ -145,6 +132,22 @@ public class KafkaOffsetTool {
 		return map;
 	}
 
+	/**
+	 * ----------------------------测试代码----------------------------
+	 */
+	public static void main(String[] args) {
+		Map<String, String> kafkaParams = new HashMap<String, String>();
+		String topic = "meta";
+		kafkaParams.put("metadata.broker.list","node1:9092,node2:9092,node3:9092,node4:9092");
+
+		//Map<TopicAndPartition, Long> map = getLastestOffset(kafkaParams,topic);
+		Map<TopicAndPartition, Long> map = getSmallestOffset(kafkaParams,topic);
+		for(TopicAndPartition tp: map.keySet()){
+			System.out.println(tp.topic() + "-" + tp.partition() + ":" + map.get(tp));
+		}
+		
+	}
+	
 	public static void test() {
 		// 读取kafka最新数据
 		// Properties props = new Properties();
