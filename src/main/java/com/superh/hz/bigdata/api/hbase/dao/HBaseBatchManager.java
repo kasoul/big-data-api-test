@@ -45,6 +45,18 @@ public class HBaseBatchManager {
 				bufferedMutatorParams);
 	}
 	
+	public void batchPutFlush(List<Put> list){
+		
+		for(Put put :list){
+			try {
+				mutator.mutate(put);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 	public void batchPut(List<Put> list){
 		for(Put put :list){
 			try {
@@ -60,7 +72,8 @@ public class HBaseBatchManager {
 		}
 	}
 	
-	public void batchDelete(List<Delete> list){
+	public void batchDeleteFlush(List<Delete> list){
+		
 		for(Delete delete :list){
 			try {
 				mutator.mutate(delete);
@@ -69,6 +82,9 @@ public class HBaseBatchManager {
 			}
 		}
 		
+	}
+	
+	public void flush(){
 		try {
 			mutator.flush();
 		} catch (IOException e) {
