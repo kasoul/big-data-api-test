@@ -1,0 +1,25 @@
+// [START declaration]
+syntax = "proto2";
+package proto;
+// [END declaration]
+
+// [START java_declaration]
+option java_package = "com.superh.hz.bigdata.api.hbase.tool.coprocessor";
+option java_outer_classname = "CountProtos";
+option java_generic_services = true;
+option java_generate_equals_and_hash = true;
+option optimize_for = SPEED;
+// [END java_declaration]
+ 
+message CountRequest {
+    required string count_flag = 1;      // 统计标记
+}
+
+message CountResponse {
+    required int64 count_value = 1;  	// 统计结果
+}
+
+service CountService {
+  rpc count(CountRequest)
+    returns (CountResponse);
+}
