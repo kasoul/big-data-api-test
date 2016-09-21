@@ -11,7 +11,7 @@ import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.FilterBase;
 
 /**
- *  测试filter
+ *  测试自定义的filter
  *  2015-2-3
  */
 public class HCTestFilter extends FilterBase {
