@@ -19,8 +19,19 @@ import kafka.javaapi.TopicMetadata;
 import kafka.javaapi.TopicMetadataRequest;
 import kafka.javaapi.consumer.SimpleConsumer;
 
+/** 
+ * kafka偏移量工具
+ */ 
 public class KafkaOffsetTool {
 	
+	/** 
+     * 获取指定时间点之前的偏移量
+     * 
+     * @param Map<String, String> kafkaParams，参数配置
+     * @param String topic，主题
+     * @param long whichTime，偏移量时间戳
+     * @return  Map<TopicAndPartition, Long>，分区偏移量
+     */  
 	private static Map<TopicAndPartition, Long> getOffsetBeforeTimestamp(Map<String, String> kafkaParams, String topic, long whichTime) {
 
 		Map<TopicAndPartition, Long> mapTpls = new HashMap<TopicAndPartition, Long>();
@@ -54,19 +65,42 @@ public class KafkaOffsetTool {
 		return mapTpls;
 	}
 
+	/** 
+     * 获取最晚偏移量
+     * 
+     * @param Map<String, String> kafkaParams，参数配置
+     * @param String topic，主题
+     * @return  Map<TopicAndPartition, Long>，分区偏移量
+     */ 
 	public static Map<TopicAndPartition, Long> getLastestOffset(Map<String, String> kafkaParams, String topic) {
 
 		return getOffsetBeforeTimestamp(kafkaParams,topic,kafka.api.OffsetRequest.LatestTime());
 	
 	}
 	
+	/** 
+     * 获取最早偏移量
+     * 
+     * @param Map<String, String> kafkaParams，参数配置
+     * @param String topic，主题
+     * @return  Map<TopicAndPartition, Long>，分区偏移量
+     */ 
 	public static Map<TopicAndPartition, Long> getSmallestOffset(Map<String, String> kafkaParams, String topic) {
 
 		return getOffsetBeforeTimestamp(kafkaParams,topic,kafka.api.OffsetRequest.EarliestTime());
 	
 	}
 
-	// private List<String> m_replicaBrokers = new ArrayList<String>();
+	/** 
+     * 访问单分区偏移量
+     * 
+     * @param SimpleConsumer consumer，消费者
+     * @param String topic，主题
+     * @param int partition，分区号
+     * @param long whichTime，时间戳
+     * @param String clientName，客户端
+     * @return  long，偏移量
+     */ 
 	private static long getLastestOffset(SimpleConsumer consumer, String topic, int partition, long whichTime,
 			String clientName) {
 
@@ -87,9 +121,14 @@ public class KafkaOffsetTool {
 	}
 
 	/**
-	* 只需要一个broker，就可以发现所有的节点，
-	* 通过TopicMetadataRequest发现所有的TopicMetadata，进而发现所有的PartitionMetadata
-	*/
+	 * 只需要一个broker，就可以发现所有的节点，
+	 * 通过TopicMetadataRequest发现所有的TopicMetadata，进而发现所有的PartitionMetadata
+     * 
+     * @param List<String> a_seedBrokers，broker地址列表
+     * @param int a_port，broker端口
+     * @param String a_topic，主题
+     * @return  TreeMap<Integer, PartitionMetadata>，分区
+     */ 
 	private static TreeMap<Integer, PartitionMetadata> findLeaderBrokerList(List<String> a_seedBrokers, int a_port,
 			String a_topic) {
 
