@@ -139,7 +139,7 @@ public class ESSearcher implements Serializable{
 
 	
 	/**
-	 * 扫面一个索引的所有文档
+	 * 扫描一个索引的所有文档
 	 * 
 	 * @param String... fields,需要返回的字段
 	 * @return List<Map<String, Object>>,查询结果，文档集合
