@@ -28,8 +28,6 @@ import org.apache.hadoop.hbase.filter.PageFilter;
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 
-import com.superh.hz.bigdata.api.hbase.tool.userFilter.HCTestFilter;
-
 
 /**
  * 数据操作方法，默认的rowkey是String类型
@@ -213,23 +211,26 @@ public class HBaseDataManager {
     }
 
 	/** 获取某个cell的数据*/
-	public void queryByRowkeyAndQualify(String rowkey,String columnFamily,String columnQualify) { 
-        try { 
+	public byte[] queryByRowkeyAndQualify(String rowkey,String columnFamily,String columnQualify) { 
+		byte[] columnValue = new byte[1024];
+		try { 
             Get get = new Get(rowkey.getBytes());// 根据rowkey查询
            // get.addFamily(columnFamily.getBytes());
             get.addColumn(columnFamily.getBytes(), columnQualify.getBytes());
             Result r = table.get(get); 
-            System.out.println("获得到rowkey:" + new String(r.getRow())); 
+            //System.out.println("获得到rowkey:" + new String(r.getRow())); 
             for (KeyValue keyValue : r.raw()) { //KeyValue是一个cell，按family，qualify排序
-                System.out.println("--------------------" + new String(keyValue.getRow()) + "----------------------------");
+               /* System.out.println("--------------------" + new String(keyValue.getRow()) + "----------------------------");
                 System.out.println("Column Family : " + new String(keyValue.getFamily()));
                 System.out.println("Column Qualify:" + new String(keyValue.getQualifier()));
                 System.out.println("Value         : " + Bytes.toString(keyValue.getValue()));
-                System.out.println("Timestamp     : " + keyValue.getTimestamp());
+                System.out.println("Timestamp     : " + keyValue.getTimestamp());*/
+            	columnValue = keyValue.getValueArray();
             } 
         } catch (IOException e) { 
             e.printStackTrace(); 
         } 
+		return columnValue;
     }
 	
 	/** 获取某个cell的数据*/
@@ -257,41 +258,6 @@ public class HBaseDataManager {
             e.printStackTrace(); 
         } 
     }
-	
-	/** 通过单个Filter查询数据*/
-	public void queryByFilter(String columnFamily, String coulmnQuaify, String value) { 
-	     try { 
-	           /* Filter filter = new SingleColumnValueFilter(Bytes 
-	                    .toBytes(columnFamily), Bytes 
-	                    .toBytes(coulmnQuaify), CompareOp.EQUAL, Bytes 
-	                    .toBytes(value)); */
-	    	 /*//region个数 * pageSize
-	 			Filter pageFilter = new PageFilter(1);
-	 			scan.setFilter(pageFilter);*/
-	    	 Filter filter  = new HCTestFilter();
-	            Scan scan = new Scan(); 
-	            scan.setCaching(2500);
-	            scan.setFilter(filter); 
-	            ResultScanner rs = table.getScanner(scan); 
-	            /*根据filter取出的是整个row，
-	             * row里其他的column family和column qualify也会被取出来
-	             * 如果一个row里不包含该coulmnQuaify，也会被查询出来
-	             * 所以filter查询是不准确的查询*/
-	            for (Result r : rs){ 
-	                System.out.println("获得到rowkey:" + new String(r.getRow())); 
-	                for (KeyValue keyValue : r.raw()) { 
-	                	  System.out.println("--------------------" + new String(keyValue.getRow()) + "----------------------------");
-	                      System.out.println("Column Family : " + new String(keyValue.getFamily()));
-	                      System.out.println("Column Qualify:" + new String(keyValue.getQualifier()));
-	                      System.out.println("Value         : " + Bytes.toString(keyValue.getValue())); 
-	                      System.out.println("Timestamp        : " + keyValue.getTimestamp()); 
-	                } 
-	            } 
-	            rs.close();
-	        } catch (Exception e) { 
-	            e.printStackTrace(); 
-	        }
-	 } 
 	
 	/** 通过单个Filter查询数据*/
 	public void queryByParamterFilter(Filter filter) { 
