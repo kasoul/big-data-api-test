@@ -43,6 +43,7 @@ public class HBaseBatchManager {
 		bufferedMutatorParams.maxKeyValueSize(maxKeyValueSize);
 		mutator = connection.getBufferedMutator(
 				bufferedMutatorParams);
+		
 	}
 	
 	/** 批量更新 */

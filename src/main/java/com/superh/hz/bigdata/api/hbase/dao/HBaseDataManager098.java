@@ -9,9 +9,6 @@ import java.util.Set;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.KeyValue;
-import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HConnection;
@@ -24,45 +21,53 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 /*import org.apache.hadoop.hbase.client.RowLock;*/
 import org.apache.hadoop.hbase.client.Scan;
-import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.FilterList;
 import org.apache.hadoop.hbase.filter.PageFilter;
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.datanucleus.store.connection.ConnectionManager;
 
 
 /**
  * 数据操作方法，默认的rowkey是String类型
- * 2016-10
+ * 适用于hbase 0.98之前的版本，已过期
+ * 2015-2-3
  */
-public class HBaseDataManager {
+@Deprecated
+public class HBaseDataManager098 {
 
-	private Table table;
-	private TableName tableName;
+	private HTableInterface table;
+	private String tableName;
 
-	private HBaseDataManager(String tableNameStr) throws IOException{
-		this.tableName = TableName.valueOf(tableNameStr);
-		Configuration configuration = HBaseConfiguration.create();
-		Connection connection = ConnectionFactory.createConnection(configuration);
-		table = connection.getTable(tableName);
+	private HBaseDataManager098(String tableName) throws IOException{
+		this.tableName = tableName;
+		Configuration configuration = HBaseConfiguration.create(new Configuration());
+		//configuration.setInt("zookeeper.session.timeout", 120000);
+		//configuration.set("zookeeper.session.timeout", "120000");
+		table = new HTable(configuration,tableName);
 	}
 	
-	@Deprecated
-	private HBaseDataManager(String tableName,Configuration configuration ) throws IOException{
+	/*private HBaseDataManager(String tableName,Configuration configuration ) throws IOException{
 		//这个是最好的方法
-		HConnection connection = HConnectionManager.getConnection(configuration);
+		HConnection connection = HConnectionManager.createConnection(configuration);
+		table = connection.getTable(tableName);
+		table2 = connection.getTable(tableName);
+		table3 = connection.getTable(tableName);
+	}*/
+	
+	private HBaseDataManager098(String tableName,Configuration configuration ) throws IOException{
+		//这个是最好的方法
+		HConnection connection = HConnectionManager.createConnection(configuration);
 		table = connection.getTable(tableName);
 		/*table2 = connection.getTable(tableName);
 		table3 = connection.getTable(tableName);*/
 	}
 	
-	public static HBaseDataManager getHBaseDataManager(String tableName){
-		HBaseDataManager hbaseDataManager = null;
+	public static HBaseDataManager098 getHBaseDataManager(String tableName){
+		HBaseDataManager098 hbaseDataManager = null;
 		try {
-			hbaseDataManager = new HBaseDataManager(tableName);
+			hbaseDataManager = new HBaseDataManager098(tableName);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,11 +84,13 @@ public class HBaseDataManager {
 		}
 	}
 	
-	
+	public void setAutoFlush(boolean flag){
+		table.setAutoFlushTo(flag);
+		//table.setWriteBufferSize(10*1024*1024);//超过设置的字节数byte数，自动提交到服务器，否则在客户端缓存不提交
+	}
 	
 	public void setWriteBufferSize(long mem){
 		try {
-			//table写缓存的大小，0.99版本以后，table的aotuflush和clearBufferOnFail都是true
 			table.setWriteBufferSize(mem);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -91,11 +98,19 @@ public class HBaseDataManager {
 		}
 	}
 	
+	public void flushCommits(){
+		try {
+			table.flushCommits();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+	}
 	
 	/** 插入一个cell 的value*/
 	public void insertData(String rowkey, String columnFamily, String columnQualify, byte[] value) {
 		Put put = new Put(rowkey.getBytes());// 一个PUT代表一行数据，再NEW一个PUT表示第二行数据,每行一个唯一的ROWKEY，此处rowkey为put构造方法中传入的值
-		put.addColumn(columnFamily.getBytes(), columnQualify.getBytes(), value);// 本行数据的第一列
+		put.add(columnFamily.getBytes(), columnQualify.getBytes(), value);// 本行数据的第一列
 		//put.add(family, qualifier, ts, value) 插入带有时间戳的cell值
 		
 		try {

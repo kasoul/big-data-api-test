@@ -7,7 +7,11 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.MasterNotRunningException;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.ZooKeeperConnectionException;
+import org.apache.hadoop.hbase.client.Admin;
+import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 
 /** 
@@ -25,16 +29,18 @@ import org.apache.hadoop.hbase.util.Bytes;
 public class HBaseClient {
 	
 	private Configuration conf = null;
-	private HBaseAdmin admin = null;
+	private Admin admin = null;
 	
-	private HBaseClient(Configuration conf) throws IOException{
-		this.conf = conf;
-		this.admin = new HBaseAdmin(conf);
+	private HBaseClient(Configuration configuration) throws IOException{
+		this.conf = configuration;
+		Connection connection = ConnectionFactory.createConnection(configuration);
+		this.admin = connection.getAdmin();
 	}
 	
 	private HBaseClient() throws IOException{
 		this.conf = HBaseConfiguration.create(new Configuration());
-		this.admin = new HBaseAdmin(this.conf);	
+		Connection connection = ConnectionFactory.createConnection(conf);
+		this.admin = connection.getAdmin();
 	}
 	
 	public static HBaseClient getClient(Configuration conf){
@@ -67,7 +73,7 @@ public class HBaseClient {
 
 	/** 判断表是否存在*/
 	public boolean existsTable(String table) throws IOException {
-		return admin.tableExists(table);
+		return admin.tableExists(TableName.valueOf(table));
 	}
 
 	/** 列出所有的表*/
@@ -88,7 +94,8 @@ public class HBaseClient {
 	/** 创建新表，初始化时根据指定的行键划分region*/
 	public void createTable(String table, byte[][] splitKeys, String... colfams)
 			throws IOException {
-		HTableDescriptor desc = new HTableDescriptor(table);
+		TableName tableName = TableName.valueOf(table);
+		HTableDescriptor desc = new HTableDescriptor(tableName);
 		for (String cf : colfams) {
 			HColumnDescriptor coldef = new HColumnDescriptor(cf);
 			desc.addFamily(coldef);
@@ -102,35 +109,39 @@ public class HBaseClient {
 	
 	/** 更改表结构*/
 	public void modifyTable(String table, String modifyColumnFamily) throws IOException {
-		byte[] tableBytes = Bytes.toBytes(table);
-		HTableDescriptor desc=admin.getTableDescriptor(tableBytes);  
+		TableName tableName = TableName.valueOf(table);
+		HTableDescriptor desc = admin.getTableDescriptor(tableName);  
 	    HColumnDescriptor colDesc=new HColumnDescriptor(modifyColumnFamily);
 	    desc.addFamily(colDesc);
-	    admin.disableTable(tableBytes);
-	    admin.modifyTable(tableBytes, desc);  
-	    admin.enableTable(tableBytes); 
+	    admin.disableTable(tableName);
+	    admin.modifyTable(tableName, desc);  
+	    admin.enableTable(tableName); 
 	}
 	
 	/** 使表无效*/
 	public void disableTable(String table) throws IOException {
-		admin.disableTable(table);
+		TableName tableName = TableName.valueOf(table);
+		admin.disableTable(tableName);
 	}
 	
 	/** 使表生效*/
 	public void enableTable(String table) throws IOException {
-		admin.enableTable(table);
+		TableName tableName = TableName.valueOf(table);
+		admin.enableTable(tableName);
 	}
 	
 	/** 判断表是否处于生效状态*/
 	public boolean isTableAvailable(String table) throws IOException {
-		return admin.isTableAvailable(table);
+		TableName tableName = TableName.valueOf(table);
+		return admin.isTableAvailable(tableName);
 	}
 
 	/** 删除一个表*/
 	public void dropTable(String table) throws IOException {
+		TableName tableName = TableName.valueOf(table);
 		if (existsTable(table)) {
-			disableTable(table);
-			admin.deleteTable(table);
+			admin.disableTable(tableName);
+			admin.deleteTable(tableName);
 		}
 	}
 	
