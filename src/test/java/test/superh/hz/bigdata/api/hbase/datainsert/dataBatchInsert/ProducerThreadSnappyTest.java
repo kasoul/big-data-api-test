@@ -37,7 +37,7 @@ public class ProducerThreadSnappyTest extends Thread {
 
 	@Override
 	public void run() {
-		hbaseDataManager.setAutoFlush(false);
+		//hbaseDataManager.setAutoFlush(false);
 		hbaseDataManager.setWriteBufferSize(20 * 1024 * 1024);
 		cal.add(Calendar.DAY_OF_MONTH, -1);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -73,7 +73,7 @@ public class ProducerThreadSnappyTest extends Thread {
 				call = call + 1;
 			}
 			hbaseDataManager.insertDataBatch(puts);
-			hbaseDataManager.flushCommits();
+			//hbaseDataManager.flushCommits();
 			LOG.info("[" + format.format(cal.getTime()) + "]: " + "phone-prefix is " + (1886650+x) + ": " 
 			+ ((j+1) * 10000) + " records has been insert into user_position_table.");
 			puts.clear();

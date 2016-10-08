@@ -36,7 +36,7 @@ public class ProducerThread500W extends Thread {
 	
 	@Override
 	public void run() {
-		hbaseDataManager.setAutoFlush(false);
+		//hbaseDataManager.setAutoFlush(false);
 		hbaseDataManager.setWriteBufferSize(20 * 1024 * 1024);
 		//Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, -1);
@@ -84,7 +84,7 @@ public class ProducerThread500W extends Thread {
 						puts.add(put);
 						if(puts.size()==10000){
 							hbaseDataManager.insertDataBatch(puts);
-							hbaseDataManager.flushCommits();
+							//hbaseDataManager.flushCommits();
 							puts.clear();
 							LOG.info(format.format(cal.getTime()) + "]: "
 							 + "phone prefix is " + x + ": " + (j * 100000 +i+1) + " records has been insert into user_position_table.");

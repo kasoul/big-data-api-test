@@ -43,7 +43,7 @@ public class ProducerThread30DaysNewCluster extends Thread {
 	
 	@Override
 	public void run() {
-		hbaseDataManager.setAutoFlush(false);
+		//hbaseDataManager.setAutoFlush(false);
 		hbaseDataManager.setWriteBufferSize(20 * 1024 * 1024);
 		long start = System.currentTimeMillis();
 		List<Put> puts = new ArrayList<Put>();
@@ -81,7 +81,7 @@ public class ProducerThread30DaysNewCluster extends Thread {
 					}
 					if(puts.size() >= 2000){
 						hbaseDataManager.insertDataBatch(puts);
-						hbaseDataManager.flushCommits();
+						//hbaseDataManager.flushCommits();
 						LOG.info("[" + format.format(cal.getTime()) + "]: " + 
 								 puts.size() + " records has been insert into user_position_table_test.");
 						puts.clear();
@@ -96,7 +96,7 @@ public class ProducerThread30DaysNewCluster extends Thread {
 		}
 		cal.add(Calendar.MINUTE,-30);
 		hbaseDataManager.insertDataBatch(puts);
-		hbaseDataManager.flushCommits();
+		//hbaseDataManager.flushCommits();
 		LOG.info("[" + format.format(cal.getTime()) + "]: " + 
 				 puts.size() + " records has been insert into user_position_table_test.");
 		puts.clear();
