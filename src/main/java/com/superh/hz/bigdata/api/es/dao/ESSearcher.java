@@ -19,6 +19,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.settings.Settings.Builder;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHitField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -137,14 +138,12 @@ public class ESSearcher implements Serializable{
 		
 	}
 
-	
 	/**
 	 * 扫描一个索引的所有文档
-	 * 
-	 * @param String... fields,需要返回的字段
+	 * @param String... fields, 需要返回的字段
 	 * @return List<Map<String, Object>>,查询结果，文档集合
 	 */
-	public List<Map<String, Object>> scan(String... fields ) {
+	public List<Map<String, Object>> scan(String... fields) {
 
 		SearchResponse searchResponse = client.prepareSearch(indexName)
 				.addFields(fields)
@@ -170,6 +169,89 @@ public class ESSearcher implements Serializable{
 		}
 		
 		return list_res;
+		
+	}
+	
+	
+	/**
+	 * 扫描一个索引的所有文档
+	 * @param int from, 起始索引
+	 * @param int size, 每页数量
+	 * @param String... fields, 需要返回的字段
+	 * @return List<Map<String, Object>>,查询结果，文档集合
+	 */
+	public List<Map<String, Object>> scan(int from, int size,String... fields) {
+
+		SearchResponse searchResponse = client.prepareSearch(indexName)
+				.setFrom(from)
+				.setSize(size)
+				.addFields(fields)
+				.execute()
+				.actionGet();
+		SearchHit[] hits = searchResponse.getHits().getHits();
+		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>() ;
+		if(hits !=null && hits.length > 0){
+			for (int i = 0; i < hits.length; i++) {
+				try {
+					Map<String,Object> map_one = new HashMap<String,Object>();
+					map_one.put("id", hits[i].getId());
+					
+					for(String field:fields){
+						SearchHitField searchHitField = hits[i].getFields().get(field);
+						map_one.put(field, searchHitField.value());
+					}
+					
+					list.add(map_one);
+					logger.debug(map_one.toString());
+				} catch (Exception e) {
+					logger.error("get hist result error:"+e.getMessage());
+					continue ; // 可能单条数据存在数据异常，则忽略跳过
+				}
+			}
+		}
+		
+		return list;
+		
+	}
+	
+	/**
+	 * 扫描一个索引的所有文档,字段类型为array
+	 * @param int from, 起始索引
+	 * @param int size, 每页数量
+	 * @param String... fields, 需要返回的字段
+	 * @return List<Map<String, Object>>,查询结果，文档集合
+	 */
+	public List<Map<String, Object>> scanArrayField(int from, int size,String... fields) {
+
+		SearchResponse searchResponse = client.prepareSearch(indexName)
+				.setFrom(from)
+				.setSize(size)
+				.addFields(fields)
+				.execute()
+				.actionGet();
+		SearchHit[] hits = searchResponse.getHits().getHits();
+		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>() ;
+		if(hits !=null && hits.length > 0){
+			for (int i = 0; i < hits.length; i++) {
+				try {
+					Map<String,Object> map_one = new HashMap<String,Object>();
+					map_one.put("id", hits[i].getId());
+					
+					for(String field:fields){
+						SearchHitField searchHitField = hits[i].getFields().get(field);
+						map_one.put(field, searchHitField.values());
+					}
+					
+					list.add(map_one);
+					logger.debug(map_one.toString());
+				} catch (Exception e) {
+					logger.error("get hist result error:"+e.getMessage());
+					continue ; // 可能单条数据存在数据异常，则忽略跳过
+				}
+			}
+		}
+		
+		return list;
 		
 	}
 

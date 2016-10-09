@@ -81,10 +81,7 @@ public class ESAdmin implements Serializable{
 			for(String key:settingConfig.keySet()){
 				settingBuilder.put(key,settingConfig.get(key));
 			}
-		}else{
-			settingBuilder.put("max_result_window", 1000000);
-			settingBuilder.put("number_of_shards", 4);
-			settingBuilder.put("number_of_replicas", 1);
+			
 		}
 
 		this.settings = settingBuilder.build();
@@ -150,8 +147,10 @@ public class ESAdmin implements Serializable{
 	/**
 	 * 删除索引
 	 * 
-	 * @param String,索引名称
-	 * @return boolean,是否删除成功
+	 * @param indexName
+	 *				String,索引名称
+	 * @return boolean
+	 *				是否删除成功
 	 */
 	public boolean deleteIndex(String indexName) {
 		DeleteIndexResponse deleteIndexResponse = client.admin().indices()
