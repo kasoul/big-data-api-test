@@ -8,7 +8,7 @@ public class ESMapping {
 	
 	public final static String TEST_MAPPING= ""
 			+ "{"
-			+ "	/*索引类型名*/"
+			+ "	/*类型名*/"
 			+ "	\"data\": {"
 			+ "		\"properties\": {"
 			+ "			/*string 类型属性*/"
