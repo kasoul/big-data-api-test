@@ -42,10 +42,10 @@ public class ESSearcher implements Serializable{
 	/**
 	 * constructor
 	 * 
-	 * @param String,ip地址或主机名
-	 * @param String,集群名称
-	 * @param String,索引名称
-	 * @param String,类型名称
+	 * @param ipAddress String,ip地址或主机名
+	 * @param clusterName String,集群名称
+	 * @param indexName String,索引名称
+	 * @param typeName String,类型名称
 	 */
 	public ESSearcher(String ipAddress, String clusterName,String indexName,String typeName){
 		
@@ -56,11 +56,11 @@ public class ESSearcher implements Serializable{
 	/**
 	 * constructor
 	 * 
-	 * @param String,ip地址或主机名
-	 * @param String,集群名称
-	 * @param int,端口号
-	 * @param String,索引名称
-	 * @param String,类型名称
+	 * @param ipAddress String,ip地址或主机名
+	 * @param clusterName String,集群名称
+	 * @param transportPort int,端口号
+	 * @param indexName String,索引名称
+	 * @param typeName String,类型名称
 	 */
 	public ESSearcher(String ipAddress, String clusterName,int transportPort,
 			String indexName,String typeName) {
@@ -105,7 +105,7 @@ public class ESSearcher implements Serializable{
 	/**
 	 * 根据id查询一个文档
 	 * 
-	 * @param String,文档id
+	 * @param id String,文档id
 	 * @return Map<String, Object>,文档映射为map
 	 */
 	public Map<String, Object> getDocToMap(String id) {
@@ -118,7 +118,7 @@ public class ESSearcher implements Serializable{
 	/**
 	 * 根据多个id查询文档
 	 * 
-	 * @param Iterable<String>,文档id集合
+	 * @param ids Iterable<String>,文档id集合
 	 * @return List<Map<String, Object>>,文档集合
 	 */
 	public List<Map<String, Object>> getDocsToMap(Iterable<String> ids) {
@@ -140,7 +140,7 @@ public class ESSearcher implements Serializable{
 
 	/**
 	 * 扫描一个索引的所有文档
-	 * @param String... fields, 需要返回的字段
+	 * @param fields String..., 需要返回的字段
 	 * @return List<Map<String, Object>>,查询结果，文档集合
 	 */
 	public List<Map<String, Object>> scan(String... fields) {
@@ -175,9 +175,9 @@ public class ESSearcher implements Serializable{
 	
 	/**
 	 * 扫描一个索引的所有文档
-	 * @param int from, 起始索引
-	 * @param int size, 每页数量
-	 * @param String... fields, 需要返回的字段
+	 * @param from int, 起始索引
+	 * @param size int, 每页数量
+	 * @param fields String..., 需要返回的字段
 	 * @return List<Map<String, Object>>,查询结果，文档集合
 	 */
 	public List<Map<String, Object>> scan(int from, int size,String... fields) {
@@ -216,9 +216,9 @@ public class ESSearcher implements Serializable{
 	
 	/**
 	 * 扫描一个索引的所有文档,字段类型为array
-	 * @param int from, 起始索引
-	 * @param int size, 每页数量
-	 * @param String... fields, 需要返回的字段
+	 * @param from int, 起始索引
+	 * @param size int, 每页数量
+	 * @param fields String..., 需要返回的字段
 	 * @return List<Map<String, Object>>,查询结果，文档集合
 	 */
 	public List<Map<String, Object>> scanArrayField(int from, int size,String... fields) {

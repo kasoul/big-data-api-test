@@ -37,9 +37,9 @@ public class ESAdmin implements Serializable{
 	/**
 	 * constructor
 	 * 
-	 * @param String,ip地址或主机名
-	 * @param String,集群名称
-	 * @param Map<String,Object>,客户端配置
+	 * @param ipAddress String,ip地址或主机名
+	 * @param clusterName String,集群名称
+	 * @param settingConfig Map<String,Object>,客户端配置
 	 */
 	public ESAdmin(String ipAddress, String clusterName, Map<String,Object> settingConfig){
 		
@@ -50,8 +50,8 @@ public class ESAdmin implements Serializable{
 	/**
 	 * constructor
 	 * 
-	 * @param String,ip地址或主机名
-	 * @param String,集群名称
+	 * @param ipAddress String,ip地址或主机名
+	 * @param clusterName String,集群名称
 	 */
 	public ESAdmin(String ipAddress, String clusterName){
 		
@@ -62,10 +62,10 @@ public class ESAdmin implements Serializable{
 	/**
 	 * constructor
 	 * 
-	 * @param String,ip地址或主机名
-	 * @param String,集群名称
-	 * @param int,端口号
-	 * @param Map<String,Object>,客户端配置
+	 * @param ipAddress String,ip地址或主机名
+	 * @param clusterName String,集群名称
+	 * @param transportPort int,端口号
+	 * @param settingConfig Map<String,Object>,客户端配置
 	 */
 	public ESAdmin(String ipAddress, String clusterName,int transportPort, Map<String,Object> settingConfig) {
 
@@ -81,7 +81,10 @@ public class ESAdmin implements Serializable{
 			for(String key:settingConfig.keySet()){
 				settingBuilder.put(key,settingConfig.get(key));
 			}
-			
+		}else{
+			settingBuilder.put("max_result_window", 1000000);
+			settingBuilder.put("number_of_shards", 4);
+			settingBuilder.put("number_of_replicas", 1);
 		}
 
 		this.settings = settingBuilder.build();
@@ -115,9 +118,9 @@ public class ESAdmin implements Serializable{
 	/**
 	 * 建立索引
 	 * 
-	 * @param String,索引名称
-	 * @param String,类型名称
-	 * @param String,mapping json
+	 * @param indexName String,索引名称
+	 * @param typeName String,类型名称
+	 * @param mappingTemp String,mapping json
 	 * @return boolean,是否创建成功
 	 */
 	public boolean createIndex(String indexName,String typeName,String mappingTemp) {	
@@ -133,7 +136,7 @@ public class ESAdmin implements Serializable{
 	/**
 	 * 判断索引是否存在
 	 * 
-	 * @param String,索引名称
+	 * @param indexName String,索引名称
 	 * @return boolean,索引是否存在
 	 */
 	public boolean existIndex(String indexName) {
@@ -147,10 +150,8 @@ public class ESAdmin implements Serializable{
 	/**
 	 * 删除索引
 	 * 
-	 * @param indexName
-	 *				String,索引名称
-	 * @return boolean
-	 *				是否删除成功
+	 * @param indexName String,索引名称
+	 * @return boolean,是否删除成功
 	 */
 	public boolean deleteIndex(String indexName) {
 		DeleteIndexResponse deleteIndexResponse = client.admin().indices()

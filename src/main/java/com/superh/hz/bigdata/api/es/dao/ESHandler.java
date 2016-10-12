@@ -43,10 +43,10 @@ public class ESHandler implements Serializable{
 	/**
 	 * constructor
 	 * 
-	 * @param String,ip地址或主机名
-	 * @param String,集群名称
-	 * @param String,索引名称
-	 * @param String,类型名称
+	 * @param ipAddress String,ip地址或主机名
+	 * @param clusterName String,集群名称
+	 * @param indexName String,索引名称
+	 * @param typeName String,类型名称
 	 */
 	public ESHandler(String ipAddress, String clusterName,String indexName,String typeName){
 		
@@ -57,11 +57,11 @@ public class ESHandler implements Serializable{
 	/**
 	 * constructor
 	 * 
-	 * @param String,ip地址或主机名
-	 * @param String,集群名称
-	 * @param int,端口号
-	 * @param String,索引名称
-	 * @param String,类型名称
+	 * @param ipAddress String,ip地址或主机名
+	 * @param clusterName String,集群名称
+	 * @param transportPort int,端口号
+	 * @param indexName String,索引名称
+	 * @param typeName String,类型名称
 	 */
 	public ESHandler(String ipAddress, String clusterName,int transportPort,
 			String indexName,String typeName) {
@@ -106,7 +106,7 @@ public class ESHandler implements Serializable{
 	/**
 	 * 批量索引文档
 	 * 
-	 * @param List<Object>,文档列表
+	 * @param documentList List<Object>,文档列表
 	 * @return BulkResponse,批量请求响应
 	 */
 	public BulkResponse bulkIndex(List<Object> documentList) {
@@ -142,7 +142,7 @@ public class ESHandler implements Serializable{
 	/**
 	 * 批量索引文档，并设置文档id
 	 * 
-	 * @param Map<String,Object>,文档id和文档列表
+	 * @param documentMap Map<String,Object>,文档id和文档列表
 	 * @return BulkResponse,批量请求响应
 	 */
 	public BulkResponse bulkIndexWithId(Map<String,Object> documentMap) throws JsonProcessingException  {
@@ -168,7 +168,7 @@ public class ESHandler implements Serializable{
 	/**
 	 * 批量删除文档
 	 * 
-	 * @param List<String>,文档id列表
+	 * @param documentMap List<String>,文档id列表
 	 * @return BulkResponse,批量请求响应
 	 */
 	public BulkResponse bulkDelete(List<String> deleteIds) {
@@ -183,7 +183,7 @@ public class ESHandler implements Serializable{
 	/**
 	 * 索引一个文档
 	 * 
-	 * @param Map<String, Object>,map映射为json对象
+	 * @param sourceData Map<String, Object>,map映射为json对象
 	 * @return IndexResponse,请求响应
 	 */
 	public IndexResponse put(Map<String, Object> sourceData) {
@@ -195,7 +195,7 @@ public class ESHandler implements Serializable{
 	/**
 	 * 索引一个文档
 	 * 
-	 * @param String,json对象
+	 * @param jsondata String,json对象
 	 * @return IndexResponse,请求响应
 	 */
 	public IndexResponse put(String jsondata) {
@@ -207,7 +207,7 @@ public class ESHandler implements Serializable{
 	/**
 	 * 索引一个文档
 	 * 
-	 * @param byte[],json对象
+	 * @param bytes byte[],json对象
 	 * @return IndexResponse,请求响应
 	 */
 	public IndexResponse put(byte[] bytes) {
@@ -219,7 +219,7 @@ public class ESHandler implements Serializable{
 	/**
 	 * 索引一个文档
 	 * 
-	 * @param Object,object映射为json对象
+	 * @param object Object,object映射为json对象
 	 * @return IndexResponse,请求响应
 	 */
 	public IndexResponse put(Object object) {
@@ -238,8 +238,8 @@ public class ESHandler implements Serializable{
 	/**
 	 * 索引一个文档,并设置文档id
 	 * 
-	 * @param Object,文档对象
-	 * @param String,文档id
+	 * @param object Object,文档对象
+	 * @param id String,文档id
 	 * @return IndexResponse,请求响应
 	 */
 	public IndexResponse put(Object object,String id) {
@@ -262,7 +262,7 @@ public class ESHandler implements Serializable{
 	/**
 	 * 删除一个文档
 	 * 
-	 * @param String,文档id
+	 * @param id String,文档id
 	 * @return DeleteResponse,请求响应
 	 */
 	public DeleteResponse delete(String id) {
@@ -275,7 +275,7 @@ public class ESHandler implements Serializable{
 	/**
 	 * 批量索引文档，输入外部请求器，不提交到服务器
 	 * 
-	 * @param BulkRequestBuilder,请求构建器
+	 * @param documentList BulkRequestBuilder,请求构建器
 	 * @param List<Object>,文档列表
 	 */
 	public void bulkIndex(BulkRequestBuilder bulkRequestBuilder,List<Object> documentList) throws JsonProcessingException  {
@@ -294,8 +294,8 @@ public class ESHandler implements Serializable{
 	/**
 	 * 批量删除文档，输入外部请求器，不提交到服务器
 	 * 
-	 * @param BulkRequestBuilder,请求构建器
-	 * @param List<String>,文档id列表
+	 * @param bulkRequestBuilder BulkRequestBuilder,请求构建器
+	 * @param deleteIds List<String>,文档id列表
 	 */
 	public void bulkDelete(BulkRequestBuilder bulkRequestBuilder,List<String> deleteIds) {
 
@@ -309,7 +309,7 @@ public class ESHandler implements Serializable{
 	/**
 	 * 提交批量请求
 	 * 
-	 * @param BulkRequestBuilder,请求构建器
+	 * @param bulkRequestBuilder BulkRequestBuilder,请求构建器
 	 * @return BulkResponse,批量请求响应
 	 */
 	public BulkResponse bulkAction(BulkRequestBuilder bulkRequestBuilder){
