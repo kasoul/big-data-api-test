@@ -20,6 +20,8 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.settings.Settings.Builder;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
 import org.slf4j.Logger;
@@ -148,33 +150,8 @@ public class ESSearcher implements Serializable{
 	 */
 	public List<Map<String, Object>> scan(String... fields) {
 
-		SearchResponse searchResponse = client.prepareSearch(indexName)
-				.setFrom(0)
-				.setSize(1000000)
-				.addFields(fields)
-				.execute()
-				.actionGet();
-		SearchHit[] hits = searchResponse.getHits().getHits();
-		List<Map<String,Object>> list_res = new ArrayList<Map<String,Object>>() ;
-		if(hits !=null && hits.length > 0){
-			for (int i = 0; i < hits.length; i++) {
-				try {
-					Map<String,Object> map_one = new HashMap<String,Object>();
-					map_one.put("id", hits[i].getId());
-					for(String field:fields){
-						map_one.put(field, hits[i].getFields().get(field).getValue());
-					}
-					list_res.add(map_one);
-					logger.debug(map_one.toString());
-				} catch (Exception e) {
-					logger.error("get hist result error:"+e.getMessage());
-					continue ; // 可能单条数据存在数据异常，则忽略跳过
-				}
-			}
-		}
-		
-		return list_res;
-		
+		return scan(0,1000000,fields);
+
 	}
 	
 	
@@ -209,13 +186,25 @@ public class ESSearcher implements Serializable{
 					list.add(map_one);
 					logger.debug(map_one.toString());
 				} catch (Exception e) {
-					logger.error("get hist result error:"+e.getMessage());
+					logger.error("get hits result error:" + e.getMessage(),e);
 					continue ; // 可能单条数据存在数据异常，则忽略跳过
 				}
 			}
 		}
 		
 		return list;
+		
+	}
+	
+	/**
+	 * 扫描一个索引的所有文档,字段类型为array
+	 * 最大返回1000000条记录
+	 * @param fields String..., 需要返回的字段
+	 * @return List<Map<String, Object>>, 查询结果，文档集合
+	 */
+	public List<Map<String, Object>> scanArrayField(String... fields) {
+
+		return scanArrayField(0, 500000, fields);
 		
 	}
 	
@@ -250,7 +239,7 @@ public class ESSearcher implements Serializable{
 					list.add(map_one);
 					logger.debug(map_one.toString());
 				} catch (Exception e) {
-					logger.error("get hist result error:"+e.getMessage());
+					logger.error("get hits result error:" + e.getMessage(),e);
 					continue ; // 可能单条数据存在数据异常，则忽略跳过
 				}
 			}
@@ -261,41 +250,103 @@ public class ESSearcher implements Serializable{
 	}
 	
 	/**
-	 * 扫描一个索引的所有文档,字段类型为array
-	 * 最大返回1000000条记录
+	 * 滚动查询扫描一个索引的所有文档
 	 * @param fields String..., 需要返回的字段
 	 * @return List<Map<String, Object>>, 查询结果，文档集合
 	 */
-	public List<Map<String, Object>> scanArrayField(String... fields) {
+	public List<Map<String, Object>> scrollScan(String... fields) {
 
 		SearchResponse searchResponse = client.prepareSearch(indexName)
-				.setFrom(0)
-				.setSize(1000000)
+				.setSearchType(SearchType.SCAN)
+				.setScroll(TimeValue.timeValueMinutes(8))
+				.setSize(5)
 				.addFields(fields)
 				.execute()
 				.actionGet();
-		SearchHit[] hits = searchResponse.getHits().getHits();
+		
 		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>() ;
-		if(hits !=null && hits.length > 0){
-			for (int i = 0; i < hits.length; i++) {
-				try {
-					Map<String,Object> map_one = new HashMap<String,Object>();
-					map_one.put("id", hits[i].getId());
+		
+		while(true){
+			searchResponse = client.prepareSearchScroll(searchResponse.getScrollId())
+					.setScroll(TimeValue.timeValueMinutes(8))
+					.execute()
+					.actionGet();
+			SearchHit[] hits = searchResponse.getHits().getHits();
+		
+			if(hits !=null && hits.length > 0){
+				for (int i = 0; i < hits.length; i++) {
+					try {
+						Map<String,Object> map_one = new HashMap<String,Object>();
+						map_one.put("id", hits[i].getId());
 					
-					for(String field:fields){
-						SearchHitField searchHitField = hits[i].getFields().get(field);
-						map_one.put(field, searchHitField.values());
+						for(String field:fields){
+							SearchHitField searchHitField = hits[i].getFields().get(field);
+							map_one.put(field, searchHitField.value());
+						}
+						logger.info(hits[i].getId());
+						list.add(map_one);
+						logger.debug(map_one.toString());
+					} catch (Exception e) {
+						logger.error("get hits result error:" + e.getMessage(),e);
+						continue ; // 可能单条数据存在数据异常，则忽略跳过
 					}
-					
-					list.add(map_one);
-					logger.debug(map_one.toString());
-				} catch (Exception e) {
-					logger.error("get hist result error:"+e.getMessage());
-					continue ; // 可能单条数据存在数据异常，则忽略跳过
 				}
+			}else{
+				break;
 			}
 		}
+
+		return list;
 		
+	}
+	
+	/**
+	 * 滚动查询扫描一个索引的所有文档,字段类型为array
+	 * @param fields String..., 需要返回的字段
+	 * @return List<Map<String, Object>>, 查询结果，文档集合
+	 */
+	public List<Map<String, Object>> scrollScanArrayField(String... fields) {
+
+		SearchResponse searchResponse = client.prepareSearch(indexName)
+				.setSearchType(SearchType.SCAN)
+				.setScroll(TimeValue.timeValueMinutes(8))
+				.setSize(5)
+				.addFields(fields)
+				.execute()
+				.actionGet();
+		
+		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>() ;
+		
+		while(true){
+			searchResponse = client.prepareSearchScroll(searchResponse.getScrollId())
+					.setScroll(TimeValue.timeValueMinutes(8))
+					.execute()
+					.actionGet();
+			SearchHit[] hits = searchResponse.getHits().getHits();
+		
+			if(hits !=null && hits.length > 0){
+				for (int i = 0; i < hits.length; i++) {
+					try {
+						Map<String,Object> map_one = new HashMap<String,Object>();
+						map_one.put("id", hits[i].getId());
+					
+						for(String field:fields){
+							SearchHitField searchHitField = hits[i].getFields().get(field);
+							map_one.put(field, searchHitField.values());
+						}
+						logger.info(hits[i].getId());
+						list.add(map_one);
+						logger.debug(map_one.toString());
+					} catch (Exception e) {
+						logger.error("get hits result error:" + e.getMessage(),e);
+						continue ; // 可能单条数据存在数据异常，则忽略跳过
+					}
+				}
+			}else{
+				break;
+			}
+		}
+
 		return list;
 		
 	}
