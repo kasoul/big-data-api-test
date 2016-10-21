@@ -12,7 +12,9 @@ import java.util.Map;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.get.MultiGetItemResponse;
 import org.elasticsearch.action.get.MultiGetResponse;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
@@ -140,12 +142,15 @@ public class ESSearcher implements Serializable{
 
 	/**
 	 * 扫描一个索引的所有文档
+	 * 最大返回1000000条记录
 	 * @param fields String..., 需要返回的字段
 	 * @return List<Map<String, Object>>,查询结果，文档集合
 	 */
 	public List<Map<String, Object>> scan(String... fields) {
 
 		SearchResponse searchResponse = client.prepareSearch(indexName)
+				.setFrom(0)
+				.setSize(1000000)
 				.addFields(fields)
 				.execute()
 				.actionGet();
@@ -252,6 +257,64 @@ public class ESSearcher implements Serializable{
 		}
 		
 		return list;
+		
+	}
+	
+	/**
+	 * 扫描一个索引的所有文档,字段类型为array
+	 * 最大返回1000000条记录
+	 * @param fields String..., 需要返回的字段
+	 * @return List<Map<String, Object>>, 查询结果，文档集合
+	 */
+	public List<Map<String, Object>> scanArrayField(String... fields) {
+
+		SearchResponse searchResponse = client.prepareSearch(indexName)
+				.setFrom(0)
+				.setSize(1000000)
+				.addFields(fields)
+				.execute()
+				.actionGet();
+		SearchHit[] hits = searchResponse.getHits().getHits();
+		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>() ;
+		if(hits !=null && hits.length > 0){
+			for (int i = 0; i < hits.length; i++) {
+				try {
+					Map<String,Object> map_one = new HashMap<String,Object>();
+					map_one.put("id", hits[i].getId());
+					
+					for(String field:fields){
+						SearchHitField searchHitField = hits[i].getFields().get(field);
+						map_one.put(field, searchHitField.values());
+					}
+					
+					list.add(map_one);
+					logger.debug(map_one.toString());
+				} catch (Exception e) {
+					logger.error("get hist result error:"+e.getMessage());
+					continue ; // 可能单条数据存在数据异常，则忽略跳过
+				}
+			}
+		}
+		
+		return list;
+		
+	}
+	
+	/**
+	 * 统计索引总数量
+	 * @return long,总数量
+	 */
+	public long count() {
+
+		SearchRequestBuilder searchRequestBuilder = client.prepareSearch(indexName);
+		searchRequestBuilder.setSearchType(SearchType.QUERY_THEN_FETCH);
+		searchRequestBuilder.setSize(0);
+		SearchResponse searchResponse = searchRequestBuilder
+				.execute()
+				.actionGet();
+		long count = searchResponse.getHits().getTotalHits();
+		
+		return count;
 		
 	}
 
