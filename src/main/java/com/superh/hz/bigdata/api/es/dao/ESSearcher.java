@@ -42,6 +42,7 @@ public class ESSearcher implements Serializable{
 	private Client client;
 	private String indexName;
 	private String typeName;
+	private String scrollId;
 
 	/**
 	 * constructor
@@ -187,12 +188,46 @@ public class ESSearcher implements Serializable{
 					logger.debug(map_one.toString());
 				} catch (Exception e) {
 					logger.error("get hits result error:" + e.getMessage(),e);
-					continue ; // 可能单条数据存在数据异常，则忽略跳过
+					continue ; 
 				}
 			}
 		}
 		
 		return list;
+		
+	}
+	
+	/**
+	 * 扫描一个索引的所有文档,只取一个字段，字段类型为array
+	 * @param field String, 需要返回的字段
+	 * @return Map<String, Object>, 查询结果，文档集合
+	 */
+	public Map<String, Object> scanSingleArrayField(int from, int size, String field) {
+
+		SearchResponse searchResponse = client.prepareSearch(indexName)
+				.setFrom(from)
+				.setSize(size)
+				.addFields(field)
+				.execute()
+				.actionGet();
+		
+		SearchHit[] hits = searchResponse.getHits().getHits();
+		Map<String,Object> map = new HashMap<String,Object>() ;
+
+		if(hits !=null && hits.length > 0){
+			for (int i = 0; i < hits.length; i++) {
+				try {
+					SearchHitField searchHitField = hits[i].getFields().get(field);
+					map.put(hits[i].getId(), searchHitField.values());
+					logger.debug(hits[i].getId());
+				} catch (Exception e) {
+					logger.error("get hits result error:" + e.getMessage(),e);
+					continue ; 
+				}
+			}
+		}
+		
+		return map;
 		
 	}
 	
@@ -267,10 +302,7 @@ public class ESSearcher implements Serializable{
 		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>() ;
 		
 		while(true){
-			searchResponse = client.prepareSearchScroll(searchResponse.getScrollId())
-					.setScroll(TimeValue.timeValueMinutes(8))
-					.execute()
-					.actionGet();
+			
 			SearchHit[] hits = searchResponse.getHits().getHits();
 		
 			if(hits !=null && hits.length > 0){
@@ -291,6 +323,10 @@ public class ESSearcher implements Serializable{
 						continue ; // 可能单条数据存在数据异常，则忽略跳过
 					}
 				}
+				searchResponse = client.prepareSearchScroll(searchResponse.getScrollId())
+						.setScroll(TimeValue.timeValueMinutes(8))
+						.execute()
+						.actionGet();
 			}else{
 				break;
 			}
@@ -308,9 +344,9 @@ public class ESSearcher implements Serializable{
 	public List<Map<String, Object>> scrollScanArrayField(String... fields) {
 
 		SearchResponse searchResponse = client.prepareSearch(indexName)
-				.setSearchType(SearchType.SCAN)
+				.setSearchType(SearchType.QUERY_AND_FETCH)
 				.setScroll(TimeValue.timeValueMinutes(8))
-				.setSize(5)
+				.setSize(1000)
 				.addFields(fields)
 				.execute()
 				.actionGet();
@@ -318,10 +354,7 @@ public class ESSearcher implements Serializable{
 		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>() ;
 		
 		while(true){
-			searchResponse = client.prepareSearchScroll(searchResponse.getScrollId())
-					.setScroll(TimeValue.timeValueMinutes(8))
-					.execute()
-					.actionGet();
+			
 			SearchHit[] hits = searchResponse.getHits().getHits();
 		
 			if(hits !=null && hits.length > 0){
@@ -334,7 +367,7 @@ public class ESSearcher implements Serializable{
 							SearchHitField searchHitField = hits[i].getFields().get(field);
 							map_one.put(field, searchHitField.values());
 						}
-						logger.info(hits[i].getId());
+						//logger.info(hits[i].getId());
 						list.add(map_one);
 						logger.debug(map_one.toString());
 					} catch (Exception e) {
@@ -342,6 +375,10 @@ public class ESSearcher implements Serializable{
 						continue ; // 可能单条数据存在数据异常，则忽略跳过
 					}
 				}
+				searchResponse = client.prepareSearchScroll(searchResponse.getScrollId())
+						.setScroll(TimeValue.timeValueMinutes(8))
+						.execute()
+						.actionGet();
 			}else{
 				break;
 			}
@@ -352,10 +389,131 @@ public class ESSearcher implements Serializable{
 	}
 	
 	/**
+	 * 滚动查询扫描一个索引的部分文档,只取一个字段，字段类型为array
+	 * @param size int, 本查询限定条数，最好是游标size的倍数
+	 * @param field String, 需要返回的字段
+	 * @return Map<String, Object>, 查询结果，文档集合
+	 */
+	public Map<String, Object> scrollScanSingleArrayField(int size,String field) {
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		SearchResponse searchResponse = null;
+		int count = 0;
+		while(count<size){
+			searchResponse = client.prepareSearchScroll(scrollId)
+					.setScroll(TimeValue.timeValueMinutes(60))
+					.execute()
+					.actionGet();
+			SearchHit[] hits = searchResponse.getHits().getHits();
+
+			if(hits !=null && hits.length > 0){
+				for (int i = 0; i < hits.length; i++) {
+					try {
+						SearchHitField searchHitField = hits[i].getFields().get(field);
+						map.put(hits[i].getId(), searchHitField.values());
+						logger.debug(hits[i].getId());
+					} catch (Exception e) {
+						logger.error("get hits result error:" + e.getMessage(),e);
+						continue ; // 可能单条数据存在数据异常，则忽略跳过
+					}
+				}
+				count += hits.length;
+			}else{
+				break;
+			}
+		}
+
+		return map;
+		
+	}
+	
+	/**
+	 * 设置一个初始游标,并返回第一次结果集合
+	 * @param pageSize int, 每次返回条数
+	 * @param field String, 需要返回的字段
+	 * @return String, 游标
+	 */
+	public Map<String, Object> setScrollId(int pageSize,String field) {
+
+		SearchResponse searchResponse = client.prepareSearch(indexName)
+				//.setSearchType()
+				.setScroll(TimeValue.timeValueMinutes(8))
+				.setSize(pageSize)
+				.addFields(field)
+				.execute()
+				.actionGet();
+		this.scrollId = searchResponse.getScrollId();
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		SearchHit[] hits = searchResponse.getHits().getHits();
+
+		if(hits !=null && hits.length > 0){
+			for (int i = 0; i < hits.length; i++) {
+				try {
+					SearchHitField searchHitField = hits[i].getFields().get(field);
+					map.put(hits[i].getId(), searchHitField.values());
+					logger.debug(hits[i].getId());
+				} catch (Exception e) {
+					logger.error("get hits result error:" + e.getMessage(),e);
+					continue ; 
+				}
+			}
+		}
+		
+		return map;
+		
+	}
+	
+	/**
+	 * 滚动查询扫描一个索引的所有文档,只取一个字段，字段类型为array
+	 * @param field String, 需要返回的字段
+	 * @return Map<String, Object>, 查询结果，文档集合
+	 */
+	public Map<String, Object> scrollScanSingleArrayField(String field) {
+
+		SearchResponse searchResponse = client.prepareSearch(indexName)
+				//.setSearchType()
+				.setScroll(TimeValue.timeValueMinutes(8))
+				.setSize(1000)
+				.addFields(field)
+				.execute()
+				.actionGet();
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		while(true){
+			
+			SearchHit[] hits = searchResponse.getHits().getHits();
+
+			if(hits !=null && hits.length > 0){
+				for (int i = 0; i < hits.length; i++) {
+					try {
+						SearchHitField searchHitField = hits[i].getFields().get(field);
+						map.put(hits[i].getId(), searchHitField.values());
+						logger.debug(hits[i].getId());
+					} catch (Exception e) {
+						logger.error("get hits result error:" + e.getMessage(),e);
+						continue ; 
+					}
+				}
+				searchResponse = client.prepareSearchScroll(searchResponse.getScrollId())
+						.setScroll(TimeValue.timeValueMinutes(8))
+						.execute()
+						.actionGet();
+			}else{
+				break;
+			}
+		}
+
+		return map;
+		
+	}
+	
+	/**
 	 * 统计索引总数量
 	 * @return long,总数量
 	 */
-	public long count() {
+	public int count() {
 
 		SearchRequestBuilder searchRequestBuilder = client.prepareSearch(indexName);
 		searchRequestBuilder.setSearchType(SearchType.QUERY_THEN_FETCH);
@@ -365,7 +523,7 @@ public class ESSearcher implements Serializable{
 				.actionGet();
 		long count = searchResponse.getHits().getTotalHits();
 		
-		return count;
+		return (int)count;
 		
 	}
 
