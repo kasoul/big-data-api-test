@@ -1,0 +1,9 @@
+windows编译protobuf-java：
+1.编译器和proto文件在同一目录，进入该目录；
+2.执行命令：protoc.exe --java_out=./ XXXX.proto,生成的java package也在同一目录下。
+
+注册coprocessor：
+alter 'tableName', METHOD => 'table_att', 'coprocessor'=>'hdfs:///lib/coprocessor.jar|package.Endpoint|1001|'
+
+注销coprocessor：
+alter 'tableName', METHOD => 'table_att_unset', NAME=>'coprocessor$1'
