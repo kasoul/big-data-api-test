@@ -1,6 +1,7 @@
 package com.superh.hz.bigdata.api.redis.dao;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.MultiKeyCommands;
+import redis.clients.jedis.Transaction;
 
 /**
  * redis client
@@ -17,7 +20,7 @@ import redis.clients.jedis.JedisPool;
  */
 public class RedisClient {
 	
-	private static final Logger log = LoggerFactory.getLogger(RedisClient.class);
+	private static final Logger logger = LoggerFactory.getLogger(RedisClient.class);
 	
 	public static void main(String args[]) {
 		getRedisInstanceInfo();
@@ -55,6 +58,30 @@ public class RedisClient {
 		HostAndPort hostAndport = new HostAndPort(ip, port);
 		nodes.add(hostAndport);
 		return new JedisCluster(nodes, 60000);
+	}
+	
+	public static void multiandwatch(String ip, int port)
+	{
+		Jedis jedis = new Jedis("127.0.0.1", 6379);
+		String watchedkey="test:watch:key";
+		List<Object> list = null;
+		while(list == null){
+			jedis.watch(watchedkey);
+			String completedNum = jedis.get(watchedkey);
+			int increment = 1;
+			String updatedcompletedNum = String.valueOf(Integer.parseInt(completedNum) + increment );
+		
+			Transaction tx = jedis.multi();
+			tx.set(watchedkey,updatedcompletedNum);
+			list = tx.exec();
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage());
+			}
+		}
+		
+		jedis.close();
 	}
 
 }
