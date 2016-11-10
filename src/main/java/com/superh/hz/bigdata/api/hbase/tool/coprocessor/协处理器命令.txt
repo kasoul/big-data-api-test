@@ -4,6 +4,7 @@ windows编译protobuf-java：
 
 注册coprocessor：
 alter 'tableName', METHOD => 'table_att', 'coprocessor'=>'hdfs:///lib/coprocessor.jar|package.Endpoint|1001|'
+重新注册需要重启hbase
 
 注销coprocessor：
 alter 'tableName', METHOD => 'table_att_unset', NAME=>'coprocessor$1'
