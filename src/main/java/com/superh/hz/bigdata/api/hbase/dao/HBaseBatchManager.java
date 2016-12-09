@@ -39,10 +39,12 @@ public class HBaseBatchManager {
 		//Table htable = connection.getTable(TableName.valueOf(tableName));
 		BufferedMutatorParams bufferedMutatorParams = new BufferedMutatorParams(
 				TableName.valueOf(tableName));
+
 		bufferedMutatorParams.writeBufferSize(writeBufferSize);
 		bufferedMutatorParams.maxKeyValueSize(maxKeyValueSize);
 		mutator = connection.getBufferedMutator(
 				bufferedMutatorParams);
+
 		
 	}
 	
