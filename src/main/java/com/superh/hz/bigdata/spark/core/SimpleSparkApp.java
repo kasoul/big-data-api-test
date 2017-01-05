@@ -90,7 +90,7 @@ public class SimpleSparkApp {
 			JavaSparkContext sc = new JavaSparkContext(conf);
 			JavaRDD<String> logData = sc.textFile(logFile).cache();
 			final Accumulator<Integer> accum = sc.accumulator(10);
-			
+
 			logData.foreach(s -> accum.add(s.length()));
 			//long totalLenth = rdd2.reduce((a,b) -> a + b);
 			System.out.println("accum value: " + accum.value());

@@ -60,6 +60,9 @@ public class RedisClient {
 		return new JedisCluster(nodes, 60000);
 	}
 	
+	/**
+	 * 事务和观察
+	 */
 	public static void multiandwatch(String ip, int port)
 	{
 		Jedis jedis = new Jedis("127.0.0.1", 6379);
