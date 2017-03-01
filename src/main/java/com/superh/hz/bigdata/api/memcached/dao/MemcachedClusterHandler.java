@@ -17,7 +17,7 @@ public class MemcachedClusterHandler {
 	
 	public static void main(String args[]) {
 		initMemcachedSocketPool();
-		testWriteMemcachedClient();
+		//testWriteMemcachedClient();
 		testReadMemcachedClient();
 	}
 

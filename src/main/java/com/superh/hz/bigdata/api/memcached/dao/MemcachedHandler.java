@@ -17,8 +17,9 @@ public class MemcachedHandler {
 	
 	public static void main(String args[]) {
 		initMemcachedSocketPool();
-		testWriteMemcachedClient();
-		testReadMemcachedClient();
+		//testWriteMemcachedClient();
+		//testReadMemcachedClient();
+		testReadMemcachedClient2();
 	}
 
 	public static void initMemcachedSocketPool() {
@@ -26,7 +27,7 @@ public class MemcachedHandler {
 		SockIOPool stp = SockIOPool.getInstance("MemCachedClient1");
 		
 		//设置连接池可用的cache服务器列表，server的构成形式是IP:PORT
-		stp.setServers(new String[]{"192.168.182.140:11211"});
+		stp.setServers(new String[]{"192.168.182.137:11211"});
 		
 		//设置连接池可用cache服务器的权重，和server数组的位置一一对应
 		//其实现方法是通过根据每个权重在连接池的bucket中放置同样数目的server（如下代码所示），因此所有权重的最大公约数应该是1，不然会引起bucket资源的浪费。 
@@ -96,6 +97,17 @@ public class MemcachedHandler {
 		System.out.println(ob1);
 		System.out.println(ob2);
 		System.out.println(ob3);
+		
+	}
+	
+	public static void testReadMemcachedClient2() {
+		MemCachedClient mcc = new MemCachedClient("MemCachedClient1");
+
+		System.out.println(mcc.get("testclusterkey1"));
+		System.out.println(mcc.get("testclusterkey2"));
+		System.out.println(mcc.get("testclusterkey3"));
+		System.out.println(mcc.get("testclusterkey4"));
+		System.out.println(mcc.get("testclusterkey5"));
 		
 	}
 
